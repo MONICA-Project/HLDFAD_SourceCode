@@ -193,7 +193,9 @@ ${REPO_ROOT}:$ docker-compose up -d
 This project depends just on Docker Engine. For Linux, instruction installation are available [here](https://runnable.com/docker/install-docker-on-linux).
 
 ### Test
-Work in progress.
+
+It has been created a dedicated repository that allows to easily performs complete test with HLDFAD module on [GitHub](https://github.com/MONICA-Project/DockerGlobalWristbandSimulation). Follows the instructions reported inside.
+
 
 ### Build
 
