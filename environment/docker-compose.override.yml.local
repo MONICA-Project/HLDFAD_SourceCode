@@ -1,0 +1,41 @@
+version: '3.7'
+
+services:
+  worker:
+    links:
+      - posgresql
+    depends_on:
+      - posgresql
+  posgresql:
+    hostname: hldf_host_posgresql_${ENVTYPE}
+    container_name: hldf_docker_posgresql_${ENVTYPE}
+    image: mdillon/postgis:latest
+    volumes:
+      - /var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${PGSQL_USER}
+      POSTGRES_PASS: ${PGSQL_PASSWORD}
+      POSTGRES_DB: ${PGSQL_DATABASE}
+    ports:
+      - '${PGSQL_PORT}:5432'
+    restart: unless-stopped
+    networks:
+      - monica_hldfad_net
+
+  portainer:
+    container_name: hldf_docker_portainer
+    image: portainer/portainer
+    command: -H unix:///var/run/docker.sock
+    restart: always
+    ports:
+    - '${PORTAINER_DOCKER_EXPOS_PORT}:9000'
+    volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+    - portainer_data:/data
+    networks:
+    - monica_hldfad_net
+
+volumes:
+  postgresql_data:
+    driver: local
+  portainer_data:

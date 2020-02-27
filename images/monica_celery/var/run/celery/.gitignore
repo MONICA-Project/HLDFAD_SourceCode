@@ -1,0 +1,12 @@
+*.pyc
+.vscode/*
+*__pycache__/*
+docker-compose.override.yml
+venv
+*.log
+.idea
+.idea/*
+.env
+Pipfile
+beat-schedule
+beat-schedule.db

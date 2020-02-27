@@ -1,0 +1,62 @@
+FROM python:3.8.1-slim-buster
+
+ARG SELECT_DB_TYPE
+ARG ENVIMAGECONFIGURATION
+ENV DEBIAN_FRONTEND noninteractive
+
+# create a folder and set is as working directory
+RUN mkdir /code
+
+# FIXME: ENABLE the following line in order to create Dockerhub image
+# COPY ./monica /code/
+
+COPY ./images/monica_celery/entrypoint/requirements.txt /code
+COPY ./images/monica_celery/entrypoint/celery_entrypoint.sh /
+
+RUN apt-get -y update
+RUN apt-get upgrade -y
+RUN apt-get install -y apt-transport-https wget
+RUN apt-get install -y software-properties-common curl
+RUN apt-get install -y libssl-dev libffi-dev
+RUN apt-get install postgresql postgresql-contrib -y
+
+RUN if [ "$SELECT_DB_TYPE" = "spatialite" ] ; then apt-get install libsqlite3-mod-spatialite -y; else echo 'SQLITE NOT INSTALLED'; fi
+RUN if [ "$SELECT_DB_TYPE" = "spatialite" ] ; then echo 'spatialite install'; else echo 'NO SPATIALITE INSTALLED'; fi
+
+# Add unstable repo to allow us to access latest GDAL builds
+#RUN echo deb http://ftp.uk.debian.org/debian unstable main contrib non-free >> /etc/apt/sources.list
+#RUN apt-get update
+#
+## Existing binutils causes a dependency conflict, correct version will be installed when GDAL gets intalled
+#RUN apt-get remove -y binutils
+#
+## Install GDAL dependencies
+#RUN apt-get -t unstable install -y libgdal-dev g++
+
+
+RUN apt-get install -y python3-pip libgdal-dev
+
+# Ensure locales configured correctly
+#RUN locale-gen en_US.UTF-8
+#ENV LC_ALL='en_US.utf8'
+
+# Set python aliases for python3
+RUN echo 'alias python=python3' >> ~/.bashrc
+RUN echo 'alias pip=pip3' >> ~/.bashrc
+
+# Update C env vars so compiler can find gdal
+ENV CPLUS_INCLUDE_PATH=/usr/include/gdal
+ENV C_INCLUDE_PATH=/usr/include/gdal
+
+WORKDIR /code
+
+RUN chmod +x /celery_entrypoint.sh
+
+# install python depends
+RUN pip install --upgrade pip
+RUN pip install -r requirements.txt
+
+# create unprivileged user
+RUN adduser --disabled-password --gecos '' myuser
+
+ENTRYPOINT ["/celery_entrypoint.sh"]

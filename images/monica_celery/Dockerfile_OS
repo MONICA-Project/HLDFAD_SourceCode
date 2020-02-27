@@ -1,0 +1,32 @@
+FROM python:3.8.1-slim-buster
+
+ENV DEBIAN_FRONTEND noninteractive
+
+COPY ./images/monica_celery/entrypoint/requirements.txt /
+
+RUN apt-get -y update
+RUN apt-get upgrade -y
+RUN apt-get install -y apt-transport-https wget
+RUN apt-get install -y software-properties-common curl
+RUN apt-get install -y libssl-dev libffi-dev
+RUN apt-get install postgresql postgresql-contrib -y
+
+RUN if [ "$SELECT_DB_TYPE" = "spatialite" ] ; then apt-get install libsqlite3-mod-spatialite -y; else echo 'SQLITE NOT INSTALLED'; fi
+RUN if [ "$SELECT_DB_TYPE" = "spatialite" ] ; then echo 'spatialite install'; else echo 'NO SPATIALITE INSTALLED'; fi
+
+RUN apt-get install -y python3-pip libgdal-dev
+
+# Set python aliases for python3
+RUN echo 'alias python=python3' >> ~/.bashrc
+RUN echo 'alias pip=pip3' >> ~/.bashrc
+
+# Update C env vars so compiler can find gdal
+ENV CPLUS_INCLUDE_PATH=/usr/include/gdal
+ENV C_INCLUDE_PATH=/usr/include/gdal
+
+# install python depends
+RUN pip install --upgrade pip
+RUN pip install -r requirements.txt
+
+# create unprivileged user
+RUN adduser --disabled-password --gecos '' myuser

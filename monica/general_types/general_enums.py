@@ -1,0 +1,12 @@
+from enum import Enum
+
+
+class MQTTPayloadConversion(Enum):
+    TYPE_CONVERSION_STANDARDDICTIONARY = 1,
+    TYPE_CONVERSION_OGCDICTIONARY = 2
+
+
+class TypeQueueDetection(Enum):
+    QUEUEDETECTION_STATIC = 1,
+    QUEUEDETECTION_DYNAMIC = 2,
+    QUEUEDETECTION_ALLMONITOREDAREA = 4

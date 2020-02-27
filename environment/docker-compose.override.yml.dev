@@ -1,0 +1,6 @@
+version: '3.7'
+
+services:
+  mongo:
+    volumes:
+      - ./images/mongodb/data:/data/db

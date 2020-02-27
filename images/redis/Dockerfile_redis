@@ -1,0 +1,4 @@
+FROM redis:latest
+
+COPY ./redis_run.sh /
+ENTRYPOINT ["/redis_run.sh"]

@@ -1,0 +1,3 @@
+import os
+
+SELECTED_PILOT = os.environ.get('APPSETTING_SELECTEDPILOT', 'TIVOLI')

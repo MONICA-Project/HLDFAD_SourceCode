@@ -1,0 +1,108 @@
+version: '3.7'
+
+services:
+  # RabbitMQ
+  rabbit:
+    container_name: hldf_docker_rabbit_${ENVTYPE}
+    hostname: hldf_rabbit_${ENVTYPE}
+    image: rabbitmq:latest
+    networks:
+      - monica_hldfad_net
+    environment:
+      # remind that if you want to enable the admin console, accessible
+      # from localhost:15672, you must type the following command
+      # 'rabbitmq-plugins enable rabbitmq_management' into the rabbit container
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASS}
+      - RABBITMQ_DEFAULT_VHOST=/
+      - RABBITMQ_LOG_BASE=/var/log/rabbitmq
+      - RABBITMQ_HOSTNAME=rabbit_${ENVTYPE}
+    ports:
+      - "${RABBITMQ_DOCKER_PORT_DIAGNOSTIC}:5672" # we forward this port because it's useful for debugging
+      - "${RABBITMQ_DOCKER_PORT_SERVICE}:15672" # hre, we can access rabbitmq management plugin
+
+  #Celery worker
+  worker:
+    container_name: hldf_docker_celery_worker_${ENVTYPE}
+    hostname: hldf_host_celery_worker_${ENVTYPE}
+    build:
+      context: .
+      dockerfile: ./images/monica_celery/Dockerfile
+      args:
+        - SELECT_DB_TYPE=${V_ARG_DATABASETYPE}
+        - ENVIMAGECONFIGURATION=DEVELOPMENT
+    # command: ./images/monica_celery/celery_entrypoint.sh
+    volumes:
+      # - ./monica:/code
+      - ./images/monica_celery/logs:/logs
+      - ./images/monica_celery/appconfig:/appconfig
+      - ./images/monica_celery/var/run/celery:/var/run/celery
+    networks:
+      - monica_hldfad_net
+    environment:
+        ENV_SELECT_DB_TYPE: ${V_ARG_DATABASETYPE}
+        DJANGO_SETTINGS_MODULE: shared.settings.appglobalconf
+        DB_PORT_5432_TCP_ADDR: ${PGSQL_HOST}
+        DB_PORT_5432_TCP_PORT: ${PGSQL_PORT}
+        DB_USER: ${PGSQL_USER}
+        DB_PASSWORD: ${PGSQL_PASSWORD}
+        DB_NAME: ${PGSQL_DATABASE}
+        RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+        RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASS}
+        RABBITMQ_HOSTNAME: rabbit
+        RABBITMQ_PORT: 5672
+        CACHEREDIS_DEFAULT_HOSTNAME: redis
+        CACHEREDIS_DEFAULT_PORT: 6379
+        ENV_MQTT_OBSERVATION_URL: ${V_ENV_MQTT_OBSERVATION_URL}
+        ENV_CATALOG_PORT: ${V_ENV_CATALOG_PORT}
+        ENV_WEB_BASE_URL: ${V_ENV_WEB_BASE_URL}
+        ENV_MQTT_OBSERVATION_PORT: ${V_ENV_MQTT_OBSERVATION_PORT}
+        ENV_CATALOG_USERNAME: ${V_ENV_CATALOG_USERNAME}
+        ENV_CATALOG_PASSWORD: ${V_ENV_CATALOG_PASSWORD}
+        MOSQUITTO_USERNAME: ${MOSQUITTO_USERNAME_VALUE}
+        MOSQUITTO_PASSWORD: ${MOSQUITTO_PASSWORD_VALUE}
+        WP6_CATALOG_CONNECTIONURL: ${V_WP6_CATALOG_CONNECTIONURL}
+        WP6_CATALOG_CONNECTIONPORT: ${V_WP6_CATALOG_CONNECTIONPORT}
+        OUTPUT_MQTTBROKER_USERNAME: ${V_OUTPUT_MQTTBROKER_USERNAME}
+        OUTPUT_MQTTBROKER_PASSWORD: ${V_OUTPUT_MQTTBROKER_PASSWORD}
+        CONFENVIRONMENT_GLOBALINFO: ${V_CONFENVIRONMENT_GLOBALINFO}
+        CONFENVIRONMENT_DEBUG: ${V_CONFENVIRONMENT_DEBUG}
+        CONFENVIRONMENT_DEBUGTEMPLATE: ${V_CONFENVIRONMENT_DEBUGTEMPLATE}
+        APPSETTING_MONITORINGAREA_LATITUDE: ${V_APPSETTING_MONITORINGAREA_LATITUDE}
+        APPSETTING_MONITORINGAREA_LONGITUDE: ${V_APPSETTING_MONITORINGAREA_LONGITUDE}
+        APPSETTING_MONITORINGAREA_HORIZONTALSIZE_M: ${V_APPSETTING_MONITORINGAREA_HORIZONTALSIZE_M}
+        APPSETTING_MONITORINGAREA_CELLSIZE_M: ${V_APPSETTING_MONITORINGAREA_CELLSIZE_M}
+        APPSETTING_MONITORINGAREA_VERTICALSIZE_M: ${V_APPSETTING_MONITORINGAREA_VERTICALSIZE_M}
+        APPSETTING_INTERVAL_OBS_VALIDITY_SECS: ${V_APPSETTING_INTERVAL_OBS_VALIDITY_SECS}
+        APPSETTING_ENABLE_EMPTY_CROWD_HEATMAP: ${V_APPSETTING_ENABLE_EMPTY_CROWD_HEATMAP}
+        APPSETTING_ENABLE_RANDOM_OUTPUT: ${V_APPSETTING_ENABLE_RANDOM_OUTPUT}
+        APPSETTING_ENABLE_RANDOM_QUEUEDETECTIONALERT: ${V_APPSETTING_ENABLE_RANDOM_QUEUEDETECTIONALERT}
+        APPSETTING_ENABLE_RANDOM_DENSITYMATRIX: ${V_APPSETTING_ENABLE_RANDOM_DENSITYMATRIX}
+        APPSETTING_ENABLE_RANDOM_FAKEQUEUEDETECTION: ${V_APPSETTING_ENABLE_RANDOM_FAKEQUEUEDETECTION}
+        APPSETTING_OBSERVATION_DEBUG_INTERVALNUMBERNOTIFICATION: ${V_APPSETTING_OBSERVATION_DEBUG_INTERVALNUMBERNOTIFICATION}
+        APPSETTING_TASK_ELABORATION_FREQ_SECS: ${V_APPSETTING_TASK_ELABORATION_FREQ_SECS}
+        APPSETTING_TASK_ALIVEAPP_FREQ_SECS: ${V_APPSETTING_TASK_ALIVEAPP_FREQ_SECS}
+        APPSETTING_ENABLE_OBS_IOTIDRETRIEVE: ${V_APPSETTING_ENABLE_OBS_IOTIDRETRIEVE}
+        APPSETTING_GOST_NAME: ${V_APPSETTING_GOST_NAME}
+        APPSETTINGS_ENABLE_IMMEDIATEELABORATION_FEEDBYNUMBEROBS: ${V_APPSETTINGS_ENABLE_IMMEDIATEELABORATION_FEEDBYNUMBEROBS}
+    links:
+      - rabbit
+      - redis
+    depends_on:
+      - rabbit
+      - redis
+
+  redis:
+    container_name: hldf_docker_cache_redis_${ENVTYPE}
+    hostname: hldf_host_cache_redis_${ENVTYPE}
+    image: redis:latest
+    sysctls:
+      net.core.somaxconn: 1024
+    ports:
+      - '${REDISCACHE_PORT}:6379'
+    networks:
+      - monica_hldfad_net
+
+networks:
+    monica_hldfad_net:
+        name: monica-hldfad-net-${ENVTYPE}

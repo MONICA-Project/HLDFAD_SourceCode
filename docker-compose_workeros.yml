@@ -1,0 +1,10 @@
+version: '3.7'
+
+services:
+  worker_os:
+    container_name: hldf_docker_celery_workeros
+    build:
+      context: .
+      dockerfile: ./images/monica_celery/Dockerfile_OS
+    volumes:
+      - ./images/monica_celery/var/run/celery:/var/run/celery
