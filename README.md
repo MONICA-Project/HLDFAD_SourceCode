@@ -13,7 +13,7 @@ The complete bottom-up data chain is the following:
     - HLDFAD
     - OGC and DSS
 Figure below provides a quick overview to give a general understanding about HLDFAD position module.
-![General MONICA Architecture](https://github.com/MONICA-Project/HLDFAD/blob/master/WP6BreakdownDiagram.png) 
+![General MONICA Architecture](https://github.com/MONICA-Project/HLDFAD_SourceCode/blob/master/WP6BreakdownDiagram.png) 
 
 It is a Docker-composed solution relying on Django Python framework. Docker containers that compose the solution are the following: 
 
