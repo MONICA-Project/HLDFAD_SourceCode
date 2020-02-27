@@ -15,15 +15,34 @@ The complete bottom-up data chain is the following:
 Figure below provides a quick overview to give a general understanding about HLDFAD position module.
 ![General MONICA Architecture](https://github.com/MONICA-Project/HLDFAD_SourceCode/blob/master/WP6BreakdownDiagram.png) 
 
-It is a Docker-composed solution relying on Django Python framework. Docker containers that compose the solution are the following: 
+HLDFAD Module actually interacts directly with exchange end point, that are middleware between different MONICA modules. Such elements are reported in the following:
+- *WP6 Service Catalog*: Beginning End Point that communicates IOT ID and MQTT output broker for MQTT output messages;
+- *OGC Service Catalog*: Beginning End Point that reports all Things and Datastreams available. HLDFAD extracts MQTT Observations topics from there
+- *MQTT Broker Observations and Output*: Runtime MQTT endpoint for input observations acquisition and output provisioning
 
-    - mosquitto: Used for MQTT Output Broker (Not necessary if not used such output datastream); 
-    - posgresql: Store output messages generated and some trace information;
+## Main functionalities
+
+Tag 02.06.01.05 of HLFDAD Docker hub images offer the following functionalities:
+
+- Crowd Heatmap, based on Wristbands Localization input
+- Queue detection Alert, based on Security Fusion Node density maps.
+
+### Crowd Heatmap
+
+Based on localization received by Wristbands Gateway, HLDFAD calculates people density map, i.e. the occurrency of the positions within a geographic monitored area expressed in terms of geo spatial rectangular matrix.
+
+### Queue Detection Alert
+
+Based on people geospatial density maps received by Security Fusion Nodes, HLDFAD generates geographic polygons with adjacent cells with specific mean of people.
+
+## Detailed Information
+
+HLDFAD is a Docker-composed solution relying on Django Python framework. Docker containers that compose the HLDFAD solution are the following: 
+
+    - worker: Django-Celery main docker, that includes task generation and management (this docker hub image)
     - rabbit: Exchange and Queue for Django task system management
-    - celery: Task generation and management (application source code run in this container)
     - redis: Cache for temporarily storage of incoming observation input before elaboration (second most important container after celery) 
 
-<!-- A teaser figure may be added here. It is best to keep the figure small (<500KB) and in the same repo -->
 ## Definition and Terms
 <table>
     <tr>
@@ -58,91 +77,97 @@ It is a Docker-composed solution relying on Django Python framework. Docker cont
         <td> Platform GOST Observation Catalog </td>
         <td> Solution component (compliant with OGC paradigm) that gives list of datastreams and associated topics for MQTT Platform Broker Subscription </td>
     </tr>
+    <tr>
+        <td> Security Fusion Node </td>
+        <td> On field gateway that perform pre-processing of video cameras images and extracts numerical features provided to MONICA cloud modules </td>
+    </tr>
 </table>
 
 ## HLDFAD Component Configuration
 
-Python dictionary LOCAL_CONFIG reported in file ${REPO_ROOT}/monica/shared/settings/appglobalconf.py (generated after startup configuration) allows to configure behaviour of application. In the following the list of element reported in 
-such configuration dictionary: 
+File ${REPO_ROOT}/.env (symbolic link generated after startup setup) reports the environment variables that area mapped on docker-compose file. . In the following, the environment variable are categorized in different sub lists. For each variable, it is indicated the name, the matching with default .env value (based on .env reported in Git Hub repository), the type (intended in terms of internal parsing) , an explaination and default value (if available).
 
+### Environment Variables: External Interfaces
 
-    - **LocConfLbls.LABEL_MQTT_OBSERVATION_URL**: [str] MQTT Platform Broker URL; 
-    - **LocConfLbls.LABEL_MQTT_OBSERVATION_PORT**: [int] MQTT Platform Broker Port; 
-    - **LocConfLbls.LABEL_CATALOG_URL**: [str] Platform GOST Observation Catalog web URL Things list (GOST_URL/v.10/Things)
-    - **LocConfLbls.LABEL_CATALOG_USERNAME**: [str] Platform GOST Observation Catalog Username
-    - **LocConfLbls.LABEL_CATALOG_PASSWORD**: [str] Platform GOST Observation Catalog Password
-    - **LocConfLbls.LABEL_PILOT_NAME**: [str] Selected Pilot (Useful for multi pilot instance)
-    - **LocConfLbls.LABEL_SW_RELEASE_VERSION**: SW_VERSION,
-    - **LocConfLbls.LABEL_UPDATE_DATASTREAM_LIST**: [str] MQTT URL to retrieve real time new registered datastreams 
-    - **LocConfLbls.LABEL_PREFIX_TOPIC**: [str] Set Topic Prefix (GOST Name) useful to complete MQTT Platform Broker URL
-    - **LocConfLbls.LABEL_INTERVAL_OBS_VALIDITY_SECS**: [int] Timeout (seconds) to consider single observation "old" and reject it from computation
-    - **LocConfLbls.LABEL_ENABLE_EMPTY_CROWD_HEATMAP**: [bool] Flag to enable generation of empty (zeros matrix) crowd heatmap generated in case of no input received (for wristband input only) 
-    - **LocConfLbls.LABEL_BYPASS_BEGINNING_CATALOG_ACQUISITION**: [bool] Flag to bypass Platform GOST Observation Catalog (it can be used in simulated mode, see below)
-    - **LocConfLbls.LABEL_BYPASS_MQTTINPUTMESSAGEACQUISITION**: [bool] Flag to bypass MQTT Platform Broker (for debugging only)
-    - **LocConfLbls.LABEL_ENABLE_UNIT_TESTS**: [bool] Flag request unit tests (for debugging only)
-    - **LocConfLbls.LABEL_ENABLE_RANDOM_QUEUEDETECTIONALERT**: [bool] Flag to enable random queue detection alert (for debugging only)
-    - **LocConfLbls.LABEL_ABORT_EXECUTION_AFTERUNITTESTS**: [bool] Flag to abort application execution after unit tests (for debugging only)
-    - **LocConfLbls.LABEL_ENABLE_RANDOM_DENSITYMATRIX**: [bool] Flag to generate random density matrix (for simulation only)
-    - **LocConfLbls.LABEL_MQTT_CLIENT_PAHO_NAME_OBSERVABLES**: [str] MQTT Presentation client ID for MQTT Platform Broker
-    - **LocConfLbls.LABEL_MQTT_CLIENT_PAHO_NAME_DATASTREAMUPDATE**: [str] MQTT Presentation client ID for MQTT Datastream Broker
-    - **LocConfLbls.LABEL_WP6_CATALOG_CONNECTIONURL**: [str] OGC Service Catalog Output URL Connection
-    - **LocConfLbls.LABEL_WP6_CATALOG_CONNECTIONPORT**: [int] OGC Service Catalog Output Port Connection
-    - **LocConfLbls.LABEL_WP6_CATALOG_POSTSERVICERETRIEVEOUTPUTINFO**: [str] OGC Service Catalog Output Service Name to recall to retrieve message output information
-    - **LocConfLbls.LABEL_OBSERVATION_DEBUG_INTERVALNUMBERNOTIFICATION**: [int] Debug Setting (for tracing only) interval seconds of notification in trace of received observation
-    - **LocConfLbls.LABEL_WP6_SERVICECATALOG_DICTIONARYSELECTED**: [Dict[OutputMessageType, Dict[str, Any]] Dictionary to be configured for OGC Service Catalog Output to associate output type and JSON to send as input for request OGC Output format 
-    - **LocConfLbls.LABEL_OUTPUT_MESSAGELIST_SELECTED**: [List[OutputMessageType]] List of selected output messages
-    - **LocConfLbls.LABEL_OUTPUT_MQTT_LISTTYPES**: [List[MQTTPayloadConversion]] List of output type: Simple MQTT Output Broker and\or OGC Service Catalog Output
-    
-Furthermore, there is additional configuration elements. For instance Python dictionary SCHEDULER_SETTINGS (reported also in ${REPO_ROOT}/monica/shared/settings/appglobalconf.py) that allows to 
-set timing tasks with:  
+Such variables allows to set up this module towards external end point.
 
-    -   "TASK_ELABORATION": [int] Period (seconds) to activate elaboration
-    -   "TASK_ALIVEAPP": [int] Period (seconds) for alive tasks to communicate that application is up and running
-    
-As aforementioned, it is possible to bypass Platform GOST Observation Catalog with auxiliary simulator that provides input data with well-known associated topics (see LocConfLbls.LABEL_BYPASS_BEGINNING_CATALOG_ACQUISITION).
-In order to obtain such result, it is necessary to set LocConfLbls.LABEL_BYPASS_BEGINNING_CATALOG_ACQUISITION to True, fills out DICTIONARY_OBSERVABLE_TOPICS reported in ${REPO_ROOT}/monica/shared/settings/default_datastreams.py 
-and activate simulator (explained in the following). 
+- **WP6_CATALOG_CONNECTIONURL**: ${V_WP6_CATALOG_CONNECTIONURL} --> [str] WP6 Service Catalog Connection Hostname
+- **WP6_CATALOG_CONNECTIONPORT**: ${V_WP6_CATALOG_CONNECTIONPORT} --> [int] WP6 Service Catalog Connection Port
+- **ENV_MQTT_OBSERVATION_URL**: ${V_ENV_MQTT_OBSERVATION_URL} --> [str] MQTT Broker Observations and output IP Address
+- **ENV_MQTT_OBSERVATION_PORT**: ${V_ENV_MQTT_OBSERVATION_PORT} --> [int] MQTT Broker Observations and output Port
+- **OUTPUT_MQTTBROKER_USERNAME**: ${V_OUTPUT_MQTTBROKER_USERNAME} --> [str] MQTT Broker Observations and output Username
+- **OUTPUT_MQTTBROKER_PASSWORD**: ${V_OUTPUT_MQTTBROKER_PASSWORD} --> [str] MQTT Broker Observations and output Password
+- **ENV_CATALOG_PORT**: ${V_ENV_CATALOG_PORT} --> [int] OGC Catalog Port
+- **ENV_WEB_BASE_URL**: ${V_ENV_WEB_BASE_URL} --> [str] OGC IP Address-Domain
+- **ENV_CATALOG_USERNAME**: ${V_ENV_CATALOG_USERNAME} --> [str] OGC Catalog Username
+- **ENV_CATALOG_PASSWORD**: ${V_ENV_CATALOG_PASSWORD} --> [str] OGC Catalog Password
+- **DB_PORT_5432_TCP_ADDR**: ${PGSQL_WORKER_HOST} --> [str] PosgreSQL Connection Database IP Address (note: PosgreSQL Service Name, when it runs locally)
+- **DB_PORT_5432_TCP_PORT**: ${PGSQL_WORKER_PORT} --> [int] PosgreSQL Connection Database TCP Port (default=5432)
+- **DB_USER**: ${PGSQL_WORKER_USER} --> [str] PosgreSQL Connection Username
+- **DB_PASSWORD**: ${PGSQL_WORKER_PASSWORD} --> [str] PosgreSQL Connection Password
+- **DB_NAME**: ${PGSQL_WORKER_DATABASE} --> [str] PosgreSQL Connection Database Name
 
-DICTIONARY_OBSERVABLE_TOPICS is Python dictionary [Dict[int, List[str]]] that specifies for each datastream ID:
-    - MQTT Broker Topic [str]
-    - Datastream ID [str]
-    
-Such configuration can be exploited also when the datastreams and MQTT topics are well known from official Platform GOST Observation Catalog. It has to be remarked that, in case of simulation, 
-topics must match with reported ones. 
+### Environment Variables: Internal Subnetwork interfaces
 
-## Dockers Environment Variables
+Such variables allows to set up this module towards internal sub net docker components interfaces (inside docker-compose file).
 
-File ${REPO_ROOT}/.env (symbolic link generated after startup setup) includes very specific Docker container configurations that shall not be changed if not necessary.
+- **RABBITMQ_DEFAULT_USER**: ${RABBITMQ_USER} --> [str] RabbitMQ Username
+- **RABBITMQ_DEFAULT_PASS**: ${RABBITMQ_PASS} --> [str] RabbitMQ Password
+- **RABBITMQ_HOSTNAME**: rabbit --> [str] RabbitMQ Hostname
+- **RABBITMQ_PORT**: 5672 --> [str] RabbitMQ Port
+- **CACHEREDIS_DEFAULT_HOSTNAME**: redis --> [str] Cache Redis Hostname
+- **CACHEREDIS_DEFAULT_PORT**: 6379 --> [int] Cache Redis Port
 
+### Environment Variables: Main Application Configurations
+
+Such variables allows to set up main internal configuration data, in particular the geographic monitored area (useful for Crowd Heatmap computation based on Wristband Localization).
+
+- **APPSETTING_MONITORINGAREA_LATITUDE**: ${V_APPSETTING_MONITORINGAREA_LATITUDE} --> [float] Crowd Heatmap Output Ground Plane Position Latitude 
+- **APPSETTING_MONITORINGAREA_LONGITUDE**: ${V_APPSETTING_MONITORINGAREA_LONGITUDE} --> [float] Crowd Heatmap Output Ground Plane Position Longitude 
+- **APPSETTING_MONITORINGAREA_HORIZONTALSIZE_M**: ${V_APPSETTING_MONITORINGAREA_HORIZONTALSIZE_M} -->  [int] Crowd Heatmap Output Ground Plane Position Horizontal Size, in meters 
+- **APPSETTING_MONITORINGAREA_VERTICALSIZE_M**: ${V_APPSETTING_MONITORINGAREA_VERTICALSIZE_M} --> [int] Crowd Heatmap Output Ground Plane Position Vertical Size, in meters 
+- **APPSETTING_MONITORINGAREA_CELLSIZE_M**: ${V_APPSETTING_MONITORINGAREA_CELLSIZE_M} --> [int] Crowd Heatmap Output Ground Plane Position Cell Size, in meter (The single size of square cell)
+
+### Environment Variables: Additional Application Configurations
+
+Such variables allows to set up main additional configuration data to regulate internal software behaviour.
+
+- **APPSETTING_ENABLE_EMPTY_CROWD_HEATMAP**: ${V_APPSETTING_ENABLE_EMPTY_CROWD_HEATMAP} --> [bool] Enable Creation of empty Crowd Heatmap when no observation are received (default=False)
+- **APPSETTING_ENABLE_RANDOM_OUTPUT**: ${V_APPSETTING_ENABLE_RANDOM_OUTPUT} --> [bool] Enable Creation of random Crowd Heatmap when no observation are received (default=False)
+- **APPSETTING_ENABLE_RANDOM_QUEUEDETECTIONALERT**: ${V_APPSETTING_ENABLE_RANDOM_QUEUEDETECTIONALERT} --> [bool] Enable Creation of random Queue Detection Alert when no observation are received (default=False)
+- **APPSETTING_TASK_ELABORATION_FREQ_SECS**: ${V_APPSETTING_TASK_ELABORATION_FREQ_SECS} --> [int] Interval of forcing elaboration expressed in seconds (independently from observations received)
+- **APPSETTING_TASK_ALIVEAPP_FREQ_SECS**: ${V_APPSETTING_TASK_ALIVEAPP_FREQ_SECS} --> [int] Interval of Task Alive in seconds (it just provides evidence via log that HLDFAD is up and running and the thread are up))
+- **APPSETTING_ENABLE_OBS_IOTIDRETRIEVE**: ${V_APPSETTING_ENABLE_OBS_IOTIDRETRIEVE} --> [bool] Enable Retrieving of observation IoT Identifier from OGC Catalog (default=True)
+- **APPSETTING_GOST_NAME**: ${V_APPSETTING_GOST_NAME} --> [str] Beginning Label in composition of observation topics (default="GOST")
+- **APPSETTINGS_ENABLE_IMMEDIATEELABORATION_FEEDBYNUMBEROBS**: ${V_APPSETTINGS_ENABLE_IMMEDIATEELABORATION_FEEDBYNUMBEROBS} --> [bool] Enable immediate trigger elaboration of Crowd Heatmap (and-or Queue Detection) when the number of observations unprocessed reaches up the number of associated datastreams (default=True)
+- **CONFENVIRONMENT_GLOBALINFO**: ${V_CONFENVIRONMENT_GLOBALINFO} --> [str] Label To Identify Environment
 
 ### Custom Types and additional definition
 
-LOCAL_CONFIG dictionary includes custom types that are documented in the following list:  
+HLDFAD Worker Docker has its own json external configuration file under path ${REPO_ROOT}/images/monica_celery/appconfig/appconfig.json.
 
-    - **OutputMessageType**: HLDFAD Output Message Type, defined in ${REPO_ROOT}/monica/general_types/modelsenums.py. Original version includes the following values:
-        - *OutputMessageType.OUTPUT_MESSAGE_TYPE_CROWDHEATMAPOUTPUT*: Calculation of Crowd Heatmap based on Wristband Locations; 
-        - *OutputMessageType.OUTPUT_MESSAGE_TYPE_QUEUEDETECTIONALERT*: Estimation of Queue Detection Alert based on Density Local Map Security Fusion Node messages
-    - **MQTTPayloadConversion**: HLDFAD Selected Output Stream, defined in  ${REPO_ROOT}/monica/general_types/general_enums.py. Original version includes the following values:
-        - *MQTTPayloadConversion.TYPE_CONVERSION_STANDARDDICTIONARY*:  MQTT Output Broker
-        - *MQTTPayloadConversion.TYPE_CONVERSION_OGCDICTIONARY*: OGC Service Catalog Output
-    - **Dictionary Configuration OGC Service Catalog Output (see LocConfLbls.LABEL_WP6_SERVICECATALOG_DICTIONARYSELECTED)**:  Dictionary to present specific output to OGC Service Catalog Output 
-    with the following fields:
-        - "externalId": [str] Name for presentation of output;  
-        - "metadata": [str] Name for Datastream;  
-        - "sensorType": [str] Sensor Type;  
-        - "unitOfMeasurement": [str] Unit of measurement;  
-        - "fixedLatitude": [float] Fixed Latitude <Optional, default=0>; 
-        - "fixedLongitude": [float] Fixed Longitude <Optional, default=0>
+It allows to enable one or both the output by field **LIST_OUTPUT_MESSAGES**. It is an array of labels that is parsed from application that can includes one or both:
+
+- **OUTPUT_MESSAGE_TYPE_CROWDHEATMAPOUTPUT**: It enables Crowd Heatmap computation based on Wristband Localization. NOTES: it enables also Wristband localization input acquisition (otherwise exluded); 
+- **OUTPUT_MESSAGE_TYPE_QUEUEDETECTIONALERT**: It enables Queue Detection Alert based on Security Fusion Node Crowd Density Local Maps messages. NOTES: it enables also Crowd Density Local messages acquisition (otherwise excluded).
 
 ## Getting Started
 <!-- Instruction to make the project up and running. -->
 Ensuring that Docker Engine is correctly installed. Then, after clone current git, from bash shell go to ${REPO_ROOT}/tools folder and launch command:
 ```bash
-${REPO_ROOT}/tools:$ sh startup_configure_elements_prod.sh
+${REPO_ROOT}/tools:$ sh configure_docker_environment.sh ${ENV_TYPE}
 ```
-Such command initializes machine folders for docker containers with correct permissions in order to allow effective lauch of the application and create file ${REPO_ROOT}/monica/shared/settings/appglobalconf.py. 
 
-**NOTE**: It is possible to copy contents of file  ${REPO_ROOT}/monica/shared/settings/dev.py in ${REPO_ROOT}/monica/shared/settings/appglobalconf.py for debugging purposes.
+where ${ENV_TYPE} sets the .env environment variables and docker-compose.override file. It can be set to:
+- local
+- dev
+- prod
+
+For local configuration, type:
+
+```bash
+${REPO_ROOT}/tools:$ sh configure_docker_environment.sh local
+```
 
 ### Simulators
 
@@ -195,10 +220,3 @@ Please fork, make your changes, and submit a pull request. For major changes, pl
 ![MONICA](https://github.com/MONICA-Project/template/raw/master/monica.png)  
 This work is supported by the European Commission through the [MONICA H2020 PROJECT](https://www.monica-project.eu) under grant agreement No 732350.
 
-> # Notes
->
-> * The above templace is adapted from [[1](https://github.com/cpswarm/template), [2](https://www.makeareadme.com), [3](https://gist.github.com/PurpleBooth/109311bb0361f32d87a2), [4](https://github.com/dbader/readme-template)].
-> * Versioning: Use [SemVer](http://semver.org/) and tag the repository with full version string. E.g. `v1.0.0`
-> * License: Provide a LICENSE file at the top level of the source tree. You can use Github to [add a license](https://help.github.com/en/articles/adding-a-license-to-a-repository). This template repository has an [Apache 2.0](LICENSE) file.
->
-> *Remove this section from the actual readme.*
