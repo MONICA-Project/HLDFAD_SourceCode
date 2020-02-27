@@ -13,7 +13,7 @@ The complete bottom-up data chain is the following:
     - HLDFAD
     - OGC and DSS
 Figure below provides a quick overview to give a general understanding about HLDFAD position module.
-![General MONICA Architecture](https://github.com/MONICA-Project/HLDFAD_SourceCode/blob/master/WP6BreakdownDiagram.png) 
+![General MONICA Architecture]|(https://github.com/MONICA-Project/HLDFAD_SourceCode/blob/master/WP6BreakdownDiagram.png) 
 
 HLDFAD Module actually interacts directly with exchange end point, that are middleware between different MONICA modules. Such elements are reported in the following:
 - *WP6 Service Catalog*: Beginning End Point that communicates IOT ID and MQTT output broker for MQTT output messages;
@@ -91,56 +91,63 @@ File ${REPO_ROOT}/.env (symbolic link generated after startup setup) reports the
 
 Such variables allows to set up this module towards external end point.
 
-- **WP6_CATALOG_CONNECTIONURL**: ${V_WP6_CATALOG_CONNECTIONURL} --> [str] WP6 Service Catalog Connection Hostname
-- **WP6_CATALOG_CONNECTIONPORT**: ${V_WP6_CATALOG_CONNECTIONPORT} --> [int] WP6 Service Catalog Connection Port
-- **ENV_MQTT_OBSERVATION_URL**: ${V_ENV_MQTT_OBSERVATION_URL} --> [str] MQTT Broker Observations and output IP Address
-- **ENV_MQTT_OBSERVATION_PORT**: ${V_ENV_MQTT_OBSERVATION_PORT} --> [int] MQTT Broker Observations and output Port
-- **OUTPUT_MQTTBROKER_USERNAME**: ${V_OUTPUT_MQTTBROKER_USERNAME} --> [str] MQTT Broker Observations and output Username
-- **OUTPUT_MQTTBROKER_PASSWORD**: ${V_OUTPUT_MQTTBROKER_PASSWORD} --> [str] MQTT Broker Observations and output Password
-- **ENV_CATALOG_PORT**: ${V_ENV_CATALOG_PORT} --> [int] OGC Catalog Port
-- **ENV_WEB_BASE_URL**: ${V_ENV_WEB_BASE_URL} --> [str] OGC IP Address-Domain
-- **ENV_CATALOG_USERNAME**: ${V_ENV_CATALOG_USERNAME} --> [str] OGC Catalog Username
-- **ENV_CATALOG_PASSWORD**: ${V_ENV_CATALOG_PASSWORD} --> [str] OGC Catalog Password
-- **DB_PORT_5432_TCP_ADDR**: ${PGSQL_WORKER_HOST} --> [str] PosgreSQL Connection Database IP Address (note: PosgreSQL Service Name, when it runs locally)
-- **DB_PORT_5432_TCP_PORT**: ${PGSQL_WORKER_PORT} --> [int] PosgreSQL Connection Database TCP Port (default=5432)
-- **DB_USER**: ${PGSQL_WORKER_USER} --> [str] PosgreSQL Connection Username
-- **DB_PASSWORD**: ${PGSQL_WORKER_PASSWORD} --> [str] PosgreSQL Connection Password
-- **DB_NAME**: ${PGSQL_WORKER_DATABASE} --> [str] PosgreSQL Connection Database Name
+| Environment Docker | .env Variable | Type | Meaning | Default Value |
+| --------------- | --------------- | --------------- | --------------- | --------------- |
+|**WP6_CATALOG_CONNECTIONURL**| ${V_WP6_CATALOG_CONNECTIONURL} | [str]| | WP6 Service Catalog Connection Hostname||
+|**WP6_CATALOG_CONNECTIONPORT**| ${V_WP6_CATALOG_CONNECTIONPORT} | [int]| | WP6 Service Catalog Connection Port||
+|**ENV_MQTT_OBSERVATION_URL**| ${V_ENV_MQTT_OBSERVATION_URL} | [str]| | MQTT Broker Observations and output IP Address||
+|**ENV_MQTT_OBSERVATION_PORT**| ${V_ENV_MQTT_OBSERVATION_PORT} | [int]| | MQTT Broker Observations and output Port||
+|**OUTPUT_MQTTBROKER_USERNAME**| ${V_OUTPUT_MQTTBROKER_USERNAME} | [str]| | MQTT Broker Observations and output Username||
+|**OUTPUT_MQTTBROKER_PASSWORD**| ${V_OUTPUT_MQTTBROKER_PASSWORD} | [str]| | MQTT Broker Observations and output Password||
+|**ENV_CATALOG_PORT**| ${V_ENV_CATALOG_PORT} | [int]| | OGC Catalog Port||
+|**ENV_WEB_BASE_URL**| ${V_ENV_WEB_BASE_URL} | [str]| | OGC IP Address-Domain||
+|**ENV_CATALOG_USERNAME**| ${V_ENV_CATALOG_USERNAME} | [str]| | OGC Catalog Username||
+|**ENV_CATALOG_PASSWORD**| ${V_ENV_CATALOG_PASSWORD} | [str]| | OGC Catalog Password||
+|**DB_PORT_5432_TCP_ADDR**| ${PGSQL_WORKER_HOST} | [str]| | PosgreSQL Connection Database IP Address ||
+|**DB_PORT_5432_TCP_PORT**| ${PGSQL_WORKER_PORT} | [int]| | PosgreSQL Connection Database TCP Port)|5432|
+|**DB_USER**| ${PGSQL_WORKER_USER} | [str]| | PosgreSQL Connection Username||
+|**DB_PASSWORD**| ${PGSQL_WORKER_PASSWORD} | [str]| | PosgreSQL Connection Password||
+|**DB_NAME**| ${PGSQL_WORKER_DATABASE} | [str]| | PosgreSQL Connection Database Name||
 
 ### Environment Variables: Internal Subnetwork interfaces
 
 Such variables allows to set up this module towards internal sub net docker components interfaces (inside docker-compose file).
-
-- **RABBITMQ_DEFAULT_USER**: ${RABBITMQ_USER} --> [str] RabbitMQ Username
-- **RABBITMQ_DEFAULT_PASS**: ${RABBITMQ_PASS} --> [str] RabbitMQ Password
-- **RABBITMQ_HOSTNAME**: rabbit --> [str] RabbitMQ Hostname
-- **RABBITMQ_PORT**: 5672 --> [str] RabbitMQ Port
-- **CACHEREDIS_DEFAULT_HOSTNAME**: redis --> [str] Cache Redis Hostname
-- **CACHEREDIS_DEFAULT_PORT**: 6379 --> [int] Cache Redis Port
+| Environment Docker | .env Variable | Type | Meaning | Default Value |
+| --------------- | --------------- | --------------- | --------------- | --------------- |
+|**RABBITMQ_DEFAULT_USER**| ${RABBITMQ_USER}|[str]| | RabbitMQ Username||
+|**RABBITMQ_DEFAULT_PASS**| ${RABBITMQ_PASS}|[str]| |RabbitMQ Password||
+|**RABBITMQ_HOSTNAME**| rabbit|[str]| | RabbitMQ Hostname||
+|**RABBITMQ_PORT**| 5672|[str]| | RabbitMQ Port||
+|**CACHEREDIS_DEFAULT_HOSTNAME**|[str]| | Cache Redis Hostname||
+|**CACHEREDIS_DEFAULT_PORT**| 6379|[int]| | Cache Redis Port||
 
 ### Environment Variables: Main Application Configurations
 
 Such variables allows to set up main internal configuration data, in particular the geographic monitored area (useful for Crowd Heatmap computation based on Wristband Localization).
 
-- **APPSETTING_MONITORINGAREA_LATITUDE**: ${V_APPSETTING_MONITORINGAREA_LATITUDE} --> [float] Crowd Heatmap Output Ground Plane Position Latitude 
-- **APPSETTING_MONITORINGAREA_LONGITUDE**: ${V_APPSETTING_MONITORINGAREA_LONGITUDE} --> [float] Crowd Heatmap Output Ground Plane Position Longitude 
-- **APPSETTING_MONITORINGAREA_HORIZONTALSIZE_M**: ${V_APPSETTING_MONITORINGAREA_HORIZONTALSIZE_M} -->  [int] Crowd Heatmap Output Ground Plane Position Horizontal Size, in meters 
-- **APPSETTING_MONITORINGAREA_VERTICALSIZE_M**: ${V_APPSETTING_MONITORINGAREA_VERTICALSIZE_M} --> [int] Crowd Heatmap Output Ground Plane Position Vertical Size, in meters 
-- **APPSETTING_MONITORINGAREA_CELLSIZE_M**: ${V_APPSETTING_MONITORINGAREA_CELLSIZE_M} --> [int] Crowd Heatmap Output Ground Plane Position Cell Size, in meter (The single size of square cell)
+| Environment Docker | .env Variable | Type | Meaning | Default Value |
+| --------------- | --------------- | --------------- | --------------- | --------------- |
+|**APPSETTING_MONITORINGAREA_LATITUDE**:| ${V_APPSETTING_MONITORINGAREA_LATITUDE}|[float]| Crowd Heatmap Output Ground Plane Position Latitude||
+|**APPSETTING_MONITORINGAREA_LONGITUDE**:| ${V_APPSETTING_MONITORINGAREA_LONGITUDE}|[float]| Crowd Heatmap Output Ground Plane Position Longitude|| 
+|**APPSETTING_MONITORINGAREA_HORIZONTALSIZE_M**:| ${V_APPSETTING_MONITORINGAREA_HORIZONTALSIZE_M}| [int]| Crowd Heatmap Output Ground Plane Position Horizontal Size, in meters|| 
+|**APPSETTING_MONITORINGAREA_VERTICALSIZE_M**:| ${V_APPSETTING_MONITORINGAREA_VERTICALSIZE_M}|[int]| Crowd Heatmap Output Ground Plane Position Vertical Size, in meters||
+|**APPSETTING_MONITORINGAREA_CELLSIZE_M**:| ${V_APPSETTING_MONITORINGAREA_CELLSIZE_M}|[int]| Crowd Heatmap Output Ground Plane Position Cell Size, in meter (The single size of square cell)||
 
 ### Environment Variables: Additional Application Configurations
 
 Such variables allows to set up main additional configuration data to regulate internal software behaviour.
 
-- **APPSETTING_ENABLE_EMPTY_CROWD_HEATMAP**: ${V_APPSETTING_ENABLE_EMPTY_CROWD_HEATMAP} --> [bool] Enable Creation of empty Crowd Heatmap when no observation are received (default=False)
-- **APPSETTING_ENABLE_RANDOM_OUTPUT**: ${V_APPSETTING_ENABLE_RANDOM_OUTPUT} --> [bool] Enable Creation of random Crowd Heatmap when no observation are received (default=False)
-- **APPSETTING_ENABLE_RANDOM_QUEUEDETECTIONALERT**: ${V_APPSETTING_ENABLE_RANDOM_QUEUEDETECTIONALERT} --> [bool] Enable Creation of random Queue Detection Alert when no observation are received (default=False)
-- **APPSETTING_TASK_ELABORATION_FREQ_SECS**: ${V_APPSETTING_TASK_ELABORATION_FREQ_SECS} --> [int] Interval of forcing elaboration expressed in seconds (independently from observations received)
-- **APPSETTING_TASK_ALIVEAPP_FREQ_SECS**: ${V_APPSETTING_TASK_ALIVEAPP_FREQ_SECS} --> [int] Interval of Task Alive in seconds (it just provides evidence via log that HLDFAD is up and running and the thread are up))
-- **APPSETTING_ENABLE_OBS_IOTIDRETRIEVE**: ${V_APPSETTING_ENABLE_OBS_IOTIDRETRIEVE} --> [bool] Enable Retrieving of observation IoT Identifier from OGC Catalog (default=True)
-- **APPSETTING_GOST_NAME**: ${V_APPSETTING_GOST_NAME} --> [str] Beginning Label in composition of observation topics (default="GOST")
-- **APPSETTINGS_ENABLE_IMMEDIATEELABORATION_FEEDBYNUMBEROBS**: ${V_APPSETTINGS_ENABLE_IMMEDIATEELABORATION_FEEDBYNUMBEROBS} --> [bool] Enable immediate trigger elaboration of Crowd Heatmap (and-or Queue Detection) when the number of observations unprocessed reaches up the number of associated datastreams (default=True)
-- **CONFENVIRONMENT_GLOBALINFO**: ${V_CONFENVIRONMENT_GLOBALINFO} --> [str] Label To Identify Environment
+| Environment Docker | .env Variable | Type | Meaning | Default Value |
+| --------------- | --------------- | --------------- | --------------- | --------------- |
+|**APPSETTING_ENABLE_EMPTY_CROWD_HEATMAP**:| ${V_APPSETTING_ENABLE_EMPTY_CROWD_HEATMAP}|[bool]| Enable Creation of empty Crowd Heatmap when no observation are received | False|
+|**APPSETTING_ENABLE_RANDOM_OUTPUT**:| ${V_APPSETTING_ENABLE_RANDOM_OUTPUT}|[bool]| Enable Creation of random Crowd Heatmap when no observation are received| False|
+|**APPSETTING_ENABLE_RANDOM_QUEUEDETECTIONALERT**:| ${V_APPSETTING_ENABLE_RANDOM_QUEUEDETECTIONALERT}|[bool]| Enable Creation of random Queue Detection Alert when no observation are received||
+|**APPSETTING_TASK_ELABORATION_FREQ_SECS**:| ${V_APPSETTING_TASK_ELABORATION_FREQ_SECS}|[int]| Interval of forcing elaboration expressed in seconds (independently from observations received)||
+|**APPSETTING_TASK_ALIVEAPP_FREQ_SECS**:| ${V_APPSETTING_TASK_ALIVEAPP_FREQ_SECS}|[int]| Interval of Task Alive in seconds (it just provides evidence via log that HLDFAD is up and running and the thread are up))|False|
+|**APPSETTING_ENABLE_OBS_IOTIDRETRIEVE**:| ${V_APPSETTING_ENABLE_OBS_IOTIDRETRIEVE}|[bool]| Enable Retrieving of observation IoT Identifier from OGC Catalog| True |
+|**APPSETTING_GOST_NAME**:| ${V_APPSETTING_GOST_NAME}|[str]| Beginning Label in composition of observation topics |GOST|
+|**APPSETTINGS_ENABLE_IMMEDIATEELABORATION_FEEDBYNUMBEROBS**:| ${V_APPSETTINGS_ENABLE_IMMEDIATEELABORATION_FEEDBYNUMBEROBS}|[bool]| Enable immediate trigger elaboration of Crowd Heatmap (and-or Queue Detection) when the number of observations unprocessed reaches up the number of associated datastreams |True|
+|**CONFENVIRONMENT_GLOBALINFO**:| ${V_CONFENVIRONMENT_GLOBALINFO}|[str]| Label To Identify Environment||
 
 ### Custom Types and additional definition
 
@@ -174,8 +181,8 @@ ${REPO_ROOT}/tools:$ sh configure_docker_environment.sh local
 Complete execution of such application mainly depends on presence of input messsages. Therefore, it is required to activate input messages from the field (real data) 
 or through simulators. There are two simulator already available to test solution:  
 
-    - **Wristband Generator**: Java gradle application that emulates Wristband Gateway (it requires SCRAL and LinkSmart)
-    - **Wristband Complete Generator**: Docker-compose emulator that replace Wristbands, Wristband Gateway, SCRAL and LinkSmart (HLDFAD can connect to it directly)
+    - **Wristband Generator**:| Java gradle application that emulates Wristband Gateway (it requires SCRAL and LinkSmart)
+    - **Wristband Complete Generator**:| Docker-compose emulator that replace Wristbands, Wristband Gateway, SCRAL and LinkSmart (HLDFAD can connect to it directly)
 
 ## Deployment
 <!-- Deployment/Installation instructions. If this is software library, change this section to "Usage" and give usage examples -->
@@ -190,11 +197,11 @@ ${REPO_ROOT}:$ docker-compose up -d
 <!-- Developer instructions. -->
 
 ### Prerequisite
-This project depends just on Docker Engine. For Linux, instruction installation are available [here](https://runnable.com/docker/install-docker-on-linux).
+This project depends just on Docker Engine. For Linux, instruction installation are available [here]|(https://runnable.com/docker/install-docker-on-linux).
 
 ### Test
 
-It has been created a dedicated repository that allows to easily performs complete test with HLDFAD module on [GitHub](https://github.com/MONICA-Project/DockerGlobalWristbandSimulation). Follows the instructions reported inside.
+It has been created a dedicated repository that allows to easily performs complete test with HLDFAD module on [GitHub]|(https://github.com/MONICA-Project/DockerGlobalWristbandSimulation). Follows the instructions reported in README.
 
 
 ### Build
@@ -210,8 +217,8 @@ ${REPO_ROOT}:$ docker-compose build
 Complete execution of such application mainly depends on presence of input messsages. Therefore, it is required to activate input messages from the field (real data) 
 or through simulators. There are two simulator already available to test solution:  
 
-    - **Wristband Generator**: Java gradle application that emulates Wristband Gateway (it requires SCRAL and LinkSmart), see  [Wristband Localization Simulator](https://github.com/MONICA-Project/WristbandLocationSimulators/blob/master/README.md)
-    - **Wristband Complete Generator**: Docker-compose emulator that replace Wristbands, Wristband Gateway, SCRAL and LinkSmart (HLDFAD can connect to it directly)
+    - **Wristband Generator**:| Java gradle application that emulates Wristband Gateway (it requires SCRAL and LinkSmart), see  [Wristband Localization Simulator]|(https://github.com/MONICA-Project/WristbandLocationSimulators/blob/master/README.md)
+    - **Wristband Complete Generator**:| Docker-compose emulator that replace Wristbands, Wristband Gateway, SCRAL and LinkSmart (HLDFAD can connect to it directly)
 
 ## Contributing
 Contributions are welcome. 
@@ -219,6 +226,6 @@ Contributions are welcome.
 Please fork, make your changes, and submit a pull request. For major changes, please open an issue first and discuss it with the other authors.
 
 ## Affiliation
-![MONICA](https://github.com/MONICA-Project/template/raw/master/monica.png)  
-This work is supported by the European Commission through the [MONICA H2020 PROJECT](https://www.monica-project.eu) under grant agreement No 732350.
+![MONICA]|(https://github.com/MONICA-Project/template/raw/master/monica.png)  
+This work is supported by the European Commission through the [MONICA H2020 PROJECT]|(https://www.monica-project.eu) under grant agreement No 732350.
 
