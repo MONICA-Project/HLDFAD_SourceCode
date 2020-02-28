@@ -121,24 +121,6 @@ See [Getting Started](#getting-started).
 
 ### Environment Variables: External Interfaces
 
-<style>
-table th:first-of-type {
-    width: 20%;
-}
-table th:nth-of-type(2) {
-    width: 20%;
-}
-table th:nth-of-type(3) {
-    width: 5%;
-}
-table th:nth-of-type(4) {
-    width: 50%;
-}
-table th:nth-of-type(5) {
-    width: 5%;
-}
-</style>
-
 Such variables allows to set up this module towards external end point: GOST, MQTT Broker and Service Catalog (Things, Datastreams and topics providers).
 
 | Environment Docker | .env Variable | Type | Meaning | Default Value |
