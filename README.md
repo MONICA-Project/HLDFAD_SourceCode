@@ -1,6 +1,7 @@
 # High Level Data Fusion and Anomaly Detection Module (HLDFAD) Quick Start Guide
 <!-- Short description of the project. -->
 
+
 ## HLDFAD Overview
 
 HLDFAD is a back end deputed to provide high level outputs based on acquisition and elaboration of selected on field observables received from MQTT Platform Broker. MQTT input topics are filtered
@@ -37,7 +38,7 @@ HLDFAD Module actually interacts directly with exchange end point, that are midd
     </tr>
     <tr>
         <td> MQTT Platform Broker </td>
-        <td> Solution component that provides real time observation from the monitored field [e.g. camera observation, localizations' observations)</td>
+        <td> Solution component that provides real time observation from the monitored field [e.g. camera observation, localizations' observations) </td>
     </tr>
     <tr>
         <td> MQTT Output Broker </td>
@@ -105,14 +106,13 @@ Service worker is the core application. After waiting for startup PosgreSQL data
 
 In the following it is reported a quick overview of the current repository in terms of folder presentation.
 
-|Folder|Link|Content|
-| ------ | ----- | ------------ |
-|.|[${REPO_ROOT}](.)| Docker Composes and environment files. Note: docker-compose_os is the file to build up only the base OS for HLDFAD worker|
-|environment|[${REPO_ROOT}/environment](environment)| It contains files supporting tools for beginning setup project|
-|images|[${REPO_ROOT}/images](images)| Volumes, Dockerfile, entrypoints and configuration for containers|
-|monica|[${REPO_ROOT}/monica](monica)| Python Source Code for HLDFAD Worker Docker application (Django-Celery based)|
-|tools|[${REPO_ROOT}/tools](tools)| Bash script to startup environment for first usage|
-
+|Folder|Content|Link|
+| ---- | -------------------------------- | ---- |
+|.| Docker Composes and environment files. Note: docker-compose_os is the file to build up only the base OS for HLDFAD worker|[${REPO_ROOT}](.)|
+|environment| It contains files supporting tools for beginning setup project| [${REPO_ROOT}/environment](environment)|
+|images| Volumes, Dockerfile, entrypoints and configuration for containers| [${REPO_ROOT}/images](images)| 
+|monica| Python Source Code for HLDFAD Worker Docker application (Django-Celery based)| [${REPO_ROOT}/monica](monica)|
+|tools| Bash script to startup environment for first usage| [${REPO_ROOT}/tools](tools)|
 
 ## HLDFAD Component Configuration
 
@@ -120,6 +120,24 @@ File ${REPO_ROOT}/.env (symbolic link generated after startup setup) reports the
 See [Getting Started](#getting-started).
 
 ### Environment Variables: External Interfaces
+
+<style>
+table th:first-of-type {
+    width: 20%;
+}
+table th:nth-of-type(2) {
+    width: 20%;
+}
+table th:nth-of-type(3) {
+    width: 5%;
+}
+table th:nth-of-type(4) {
+    width: 50%;
+}
+table th:nth-of-type(5) {
+    width: 5%;
+}
+</style>
 
 Such variables allows to set up this module towards external end point: GOST, MQTT Broker and Service Catalog (Things, Datastreams and topics providers).
 
@@ -185,7 +203,7 @@ Such variables allows to set up main additional configuration data to regulate i
 
 ### Custom Types and additional definition
 
-HLDFAD Worker Docker has its own json external configuration file under path ${REPO_ROOT}/images/monica_celery/appconfig/appconfig.json.
+HLDFAD Worker Docker has its own json external configuration file under path [${REPO_ROOT}/images/monica_celery/appconfig/appconfig.json](images/monica_celery/appconfig/appconfig.json).
 
 It allows to enable one or both the output by field **LIST_OUTPUT_MESSAGES**. It is an array of labels that is parsed from application that can includes one or both:
 
@@ -239,14 +257,14 @@ ${REPO_ROOT}:$ docker-compose up -d
 <!-- Developer instructions. -->
 
 ### Prerequisite
-This project depends just on Docker Engine. For Linux, instruction installation are available [here]|(https://runnable.com/docker/install-docker-on-linux).
+This project depends just on Docker Engine. For Linux, instruction installation are available [here](https://runnable.com/docker/install-docker-on-linux).
 
 ### Test
 
 The repository itself contains the source code and docker environment up and running, but without specific input and output elements (OGC Catalog and MQTT Broker), it stops immediately 
 for lack of information (it is self consistent, but it is part of more complex architecture and needs observations to elaborate and middleware to provide output).
 
-For this reason, it has been created a dedicated repository that allows to easily performs complete MONICA test, including HLDFAD module on [GitHub]|(https://github.com/MONICA-Project/DockerGlobalWristbandSimulation). Follows the instructions reported in README.
+For this reason, it has been created a dedicated repository that allows to easily performs complete MONICA test, including HLDFAD module on [GitHub](https://github.com/MONICA-Project/DockerGlobalWristbandSimulation). Follows the instructions reported in README.
 
 ## Simulators
 
@@ -262,4 +280,4 @@ Please fork, make your changes, and submit a pull request. For major changes, pl
 
 ## Affiliation
 ![MONICA](https://github.com/MONICA-Project/template/raw/master/monica.png)  
-This work is supported by the European Commission through the [MONICA H2020 PROJECT]|(https://www.monica-project.eu) under grant agreement No 732350.
+This work is supported by the European Commission through the [MONICA H2020 PROJECT](https://www.monica-project.eu) under grant agreement No 732350.
