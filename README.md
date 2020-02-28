@@ -125,21 +125,21 @@ Such variables allows to set up this module towards external end point: GOST, MQ
 
 | Environment Docker | .env Variable | Type | Meaning | Default Value |
 | ---------- | ---------- | ---- | --------------- | ------- |
-|**WP6_CATALOG_CONNECTIONURL**| ${V_WP6_CATALOG_CONNECTIONURL} | *str* | WP6 Service Catalog Connection Hostname||
-|**WP6_CATALOG_CONNECTIONPORT**| ${V_WP6_CATALOG_CONNECTIONPORT} | *int* | WP6 Service Catalog Connection Port||
-|**ENV_MQTT_OBSERVATION_URL**| ${V_ENV_MQTT_OBSERVATION_URL} | *str* | MQTT Broker Observations and output IP Address||
-|**ENV_MQTT_OBSERVATION_PORT**| ${V_ENV_MQTT_OBSERVATION_PORT} | *int* | MQTT Broker Observations and output Port||
-|**OUTPUT_MQTTBROKER_USERNAME**| ${V_OUTPUT_MQTTBROKER_USERNAME} | *str* | MQTT Broker Observations and output Username||
-|**OUTPUT_MQTTBROKER_PASSWORD**| ${V_OUTPUT_MQTTBROKER_PASSWORD} | *str* | MQTT Broker Observations and output Password||
-|**ENV_CATALOG_PORT**| ${V_ENV_CATALOG_PORT} | *int* | OGC Catalog Port||
-|**ENV_WEB_BASE_URL**| ${V_ENV_WEB_BASE_URL} | *str* | OGC IP Address-Domain||
-|**ENV_CATALOG_USERNAME**| ${V_ENV_CATALOG_USERNAME} | *str* | OGC Catalog Username||
-|**ENV_CATALOG_PASSWORD**| ${V_ENV_CATALOG_PASSWORD} | *str* | OGC Catalog Password||
+|**WP6_CATALOG_CONNECTIONURL**| ${V_WP6CATALOG_URL} | *str* | WP6 Service Catalog Connection Hostname||
+|**WP6_CATALOG_CONNECTIONPORT**| ${V_WP6CATALOG_PORT} | *int* | WP6 Service Catalog Connection Port||
+|**ENV_MQTT_OBSERVATION_URL**| ${V_MQTTOBSERV_URL} | *str* | MQTT Broker Observations and output IP Address||
+|**ENV_MQTT_OBSERVATION_PORT**| ${V_MQTTOBSERV_PORT} | *int* | MQTT Broker Observations and output Port||
+|**OUTPUT_MQTTBROKER_USERNAME**| ${V_MQTTOUTPUT_USER} | *str* | MQTT Broker Observations and output Username||
+|**OUTPUT_MQTTBROKER_PASSWORD**| ${V_MQTTOUTPUT_PWD} | *str* | MQTT Broker Observations and output Password||
+|**ENV_CATALOG_PORT**| ${V_CATALOG_PORT} | *int* | OGC Catalog Port||
+|**ENV_WEB_BASE_URL**| ${V_BASE_URL} | *str* | OGC IP Address-Domain||
+|**ENV_CATALOG_USERNAME**| ${V_CATALOG_USER} | *str* | OGC Catalog Username||
+|**ENV_CATALOG_PASSWORD**| ${V_CATALOG_PWD} | *str* | OGC Catalog Password||
 |**DB_PORT_5432_TCP_ADDR**| ${PGSQL_WORKER_HOST} | *str* | PosgreSQL Connection Database IP Address ||
 |**DB_PORT_5432_TCP_PORT**| ${PGSQL_WORKER_PORT} | *int* | PosgreSQL Connection Database TCP Port)|5432|
 |**DB_USER**| ${PGSQL_WORKER_USER} | *str* | PosgreSQL Connection Username||
-|**DB_PASSWORD**| ${PGSQL_WORKER_PASSWORD} | *str* | PosgreSQL Connection Password||
-|**DB_NAME**| ${PGSQL_WORKER_DATABASE} | *str* | PosgreSQL Connection Database Name||
+|**DB_PASSWORD**| ${PGSQL_WORKER_PWD} | *str* | PosgreSQL Connection Password||
+|**DB_NAME**| ${PGSQL_WORKER_DB} | *str* | PosgreSQL Connection Database Name||
 
 ### Environment Variables: Internal Subnetwork interfaces
 
@@ -159,11 +159,11 @@ Such variables allows to set up main internal configuration data, in particular 
 
 | Environment Docker | .env Variable | Type | Meaning | Default Value |
 | ---------- | ---------- | ---- | --------------- | ------- |
-|**APPSETTING_MONITORINGAREA_LATITUDE**| ${V_APPSETTING_MONITORINGAREA_LATITUDE}|*float*| Crowd Heatmap Output Ground Plane Position Latitude||
-|**APPSETTING_MONITORINGAREA_LONGITUDE**| ${V_APPSETTING_MONITORINGAREA_LONGITUDE}|*float*| Crowd Heatmap Output Ground Plane Position Longitude|| 
-|**APPSETTING_MONITORINGAREA_HORIZONTALSIZE_M**| ${V_APPSETTING_MONITORINGAREA_HORIZONTALSIZE_M}| *int*| Crowd Heatmap Output Ground Plane Position Horizontal Size, in meters|| 
-|**APPSETTING_MONITORINGAREA_VERTICALSIZE_M**| ${V_APPSETTING_MONITORINGAREA_VERTICALSIZE_M}|*int*| Crowd Heatmap Output Ground Plane Position Vertical Size, in meters||
-|**APPSETTING_MONITORINGAREA_CELLSIZE_M**| ${V_APPSETTING_MONITORINGAREA_CELLSIZE_M}|*int*| Crowd Heatmap Output Ground Plane Position Cell Size, in meter (The single size of square cell)||
+|**APPSETTING_MONITORINGAREA_LATITUDE**| ${V_APPSETTING_MONAREA_LAT}|*float*| Crowd Heatmap Output Ground Plane Position Latitude||
+|**APPSETTING_MONITORINGAREA_LONGITUDE**| ${V_APPSETTING_MONAREA_LONG}|*float*| Crowd Heatmap Output Ground Plane Position Longitude|| 
+|**APPSETTING_MONITORINGAREA_HORIZONTALSIZE_M**| ${V_APPSETTING_MONAREA_HORIZSIZE_M}| *int*| Crowd Heatmap Output Ground Plane Position Horizontal Size, in meters|| 
+|**APPSETTING_MONITORINGAREA_VERTICALSIZE_M**| ${V_APPSETTING_MONAREA_VERTSIZE_M}|*int*| Crowd Heatmap Output Ground Plane Position Vertical Size, in meters||
+|**APPSETTING_MONITORINGAREA_CELLSIZE_M**| ${V_APPSETTING_MONAREA_CELLSIZE_M}|*int*| Crowd Heatmap Output Ground Plane Position Cell Size, in meter (The single size of square cell)||
 
 ### Environment Variables: Additional Application Configurations
 
@@ -171,7 +171,7 @@ Such variables allows to set up main additional configuration data to regulate i
 
 | Environment Docker | .env Variable | Type | Meaning | Default Value |
 | -------- | -------- | ---- | ------------------ | ------- |
-|**APPSETTING_ENABLE_EMPTY_CROWD_HEATMAP**| ${V_APPSETTING_ENABLE_EMPTY_CROWD_HEATMAP}|*bool*| Enable Creation of empty Crowd Heatmap when no observation are received | False|
+|**APPSETTING_ENABLE_EMPTY_CROWD_HEATMAP**| ${V_APPSETTING_ENABLE_EMPTYCROWDHEATMAP}|*bool*| Enable Creation of empty Crowd Heatmap when no observation are received | False|
 |**APPSETTING_ENABLE_RANDOM_OUTPUT**| ${V_APPSETTING_ENABLE_RANDOM_OUTPUT}|*bool*| Enable Creation of random Crowd Heatmap when no observation are received| False|
 |**APPSETTING_ENABLE_RANDOM_QUEUEDETECTIONALERT**| ${V_APPSETTING_ENABLE_RANDOM_QUEUEDETECTIONALERT}|*bool*| Enable Creation of random Queue Detection Alert when no observation are received||
 |**APPSETTING_TASK_ELABORATION_FREQ_SECS**| ${V_APPSETTING_TASK_ELABORATION_FREQ_SECS}|*int*| Interval of forcing elaboration expressed in seconds (independently from observations received)||
