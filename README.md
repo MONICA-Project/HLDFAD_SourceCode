@@ -159,11 +159,11 @@ Such variables allows to set up main internal configuration data, in particular 
 
 | Environment Docker | .env Variable | Type | Meaning | Default Value |
 | ---------- | ---------- | ---- | --------------- | ------- |
-|**APPSETTING_MONITORINGAREA_LATITUDE**| ${V_APPSETTING_MONAREA_LAT}|*float*| Crowd Heatmap Output Ground Plane Position Latitude||
-|**APPSETTING_MONITORINGAREA_LONGITUDE**| ${V_APPSETTING_MONAREA_LONG}|*float*| Crowd Heatmap Output Ground Plane Position Longitude|| 
-|**APPSETTING_MONITORINGAREA_HORIZONTALSIZE_M**| ${V_APPSETTING_MONAREA_HORIZSIZE_M}| *int*| Crowd Heatmap Output Ground Plane Position Horizontal Size, in meters|| 
-|**APPSETTING_MONITORINGAREA_VERTICALSIZE_M**| ${V_APPSETTING_MONAREA_VERTSIZE_M}|*int*| Crowd Heatmap Output Ground Plane Position Vertical Size, in meters||
-|**APPSETTING_MONITORINGAREA_CELLSIZE_M**| ${V_APPSETTING_MONAREA_CELLSIZE_M}|*int*| Crowd Heatmap Output Ground Plane Position Cell Size, in meter (The single size of square cell)||
+|**APPSETTING_MONITORINGAREA_LATITUDE**| ${APPENV_MONAREA_LAT}|*float*| Crowd Heatmap Output Ground Plane Position Latitude||
+|**APPSETTING_MONITORINGAREA_LONGITUDE**| ${APPENV_MONAREA_LONG}|*float*| Crowd Heatmap Output Ground Plane Position Longitude|| 
+|**APPSETTING_MONITORINGAREA_HORIZONTALSIZE_M**| ${APPENV_MONAREA_HORIZSIZE_M}| *int*| Crowd Heatmap Output Ground Plane Position Horizontal Size, in meters|| 
+|**APPSETTING_MONITORINGAREA_VERTICALSIZE_M**| ${APPENV_MONAREA_VERTSIZE_M}|*int*| Crowd Heatmap Output Ground Plane Position Vertical Size, in meters||
+|**APPSETTING_MONITORINGAREA_CELLSIZE_M**| ${APPENV_MONAREA_CELLSIZE_M}|*int*| Crowd Heatmap Output Ground Plane Position Cell Size, in meter (The single size of square cell)||
 
 ### Environment Variables: Additional Application Configurations
 
@@ -171,17 +171,16 @@ Such variables allows to set up main additional configuration data to regulate i
 
 | Environment Docker | .env Variable | Type | Meaning | Default Value |
 | -------- | -------- | ---- | ------------------ | ------- |
-|**APPSETTING_ENABLE_EMPTY_CROWD_HEATMAP**| ${V_APPSETTING_ENABLE_EMPTYCROWDHEATMAP}|*bool*| Enable Creation of empty Crowd Heatmap when no observation are received | False|
-|**APPSETTING_ENABLE_RANDOM_OUTPUT**| ${V_APPSETTING_ENABLE_RANDOM_OUTPUT}|*bool*| Enable Creation of random Crowd Heatmap when no observation are received| False|
-|**APPSETTING_ENABLE_RANDOM_QUEUEDETECTIONALERT**| ${V_APPSETTING_ENABLE_RANDOM_QUEUEDETECTIONALERT}|*bool*| Enable Creation of random Queue Detection Alert when no observation are received||
-|**APPSETTING_TASK_ELABORATION_FREQ_SECS**| ${V_APPSETTING_TASK_ELABORATION_FREQ_SECS}|*int*| Interval of forcing elaboration expressed in seconds (independently from observations received)||
-|**APPSETTING_TASK_ALIVEAPP_FREQ_SECS**| ${V_APPSETTING_TASK_ALIVEAPP_FREQ_SECS}|*int*| Interval of Task Alive in seconds (it just provides evidence via log that HLDFAD is up and running and the thread are up))|False|
-|**APPSETTING_ENABLE_OBS_IOTIDRETRIEVE**| ${V_APPSETTING_ENABLE_OBS_IOTIDRETRIEVE}|*bool*| Enable Retrieving of observation IoT Identifier from OGC Catalog| True |
-|**APPSETTING_GOST_NAME**| ${V_APPSETTING_GOST_NAME}|*str*| Beginning Label in composition of observation topics |GOST|
-|**APPSETTINGS_ENABLE_IMMELAB**  | ${V_APPSETTINGS_ENABLE_IMMELAB}|*bool*| Enable immediate trigger elaboration of Crowd Heatmap (and-or Queue Detection) when the number of observations unprocessed reaches up the number of associated datastreams |True|
-|**CONFENVIRONMENT_GLOBALINFO**| ${V_CONFENVIRONMENT_GLOBALINFO}|*str*| Label To Identify Environment||
+|**APPSETTING_ENABLE_EMPTY_CROWD_HEATMAP**| ${APPENV_ENABLEEMPTYCROWDMAP}|*bool*| Enable Creation of empty Crowd Heatmap when no observation are received | False|
+|**APPSETTING_ENABLE_RANDOM_OUTPUT**| ${APPENV_ENABLE_RANDOM_OUTPUT}|*bool*| Enable Creation of random Crowd Heatmap when no observation are received| False|
+|**APPSETTING_TASK_ELABORATION_FREQ_SECS**| ${APPENV_TASKELAB_FREQSEC}|*int*| Interval of forcing elaboration expressed in seconds (independently from observations received)||
+|**APPSETTING_TASK_ALIVEAPP_FREQ_SECS**| ${APPENV_TASK_ALIVEAPP_FREQ_SECS}|*int*| Interval of Task Alive in seconds (it just provides evidence via log that HLDFAD is up and running and the thread are up))|False|
+|**APPSETTING_ENABLE_OBS_IOTIDRETRIEVE**| ${APPENV_ENABLEOBSIDGET}|*bool*| Enable Retrieving of observation IoT Identifier from OGC Catalog| True |
+|**APPSETTING_GOST_NAME**| ${APPENV_GOST_NAME}|*str*| Beginning Label in composition of observation topics |GOST|
+|**APPSETTINGS_ENABLE_IMMELAB**  | ${APPENV_ENABLEIMMELABOR}|*bool*| Enable immediate trigger elaboration of Crowd Heatmap (and-or Queue Detection) when the number of observations unprocessed reaches up the number of associated datastreams |True|
+|**CONFENVIRONMENT_GLOBALINFO**| ${CONFENV_GLOBINFO}|*str*| Label To Identify Environment||
 
-**NOTE**:  APPSETTINGS_ENABLE_IMMELAB real name is APPSETTINGS_ENABLE_IMMEDIATEELABORATION_FEEDBYNUMBEROBS, whereas V_APPSETTINGS_ENABLE_IMMELAB real value is V_APPSETTINGS_ENABLE_IMMEDIATEELABORATION_FEEDBYNUMBEROBS. They was changed just for formatting issues
+**NOTE**:  APPSETTINGS_ENABLE_IMMELAB real name is APPSETTINGS_ENABLE_IMMEDIATEELABORATION_FEEDBYNUMBEROBS, whereas APPENV_ENABLEIMMELABOR real value is V_APPSETTINGS_ENABLE_IMMEDIATEELABORATION_FEEDBYNUMBEROBS. They was changed just for formatting issues
 
 ### Custom Types and additional definition
 
