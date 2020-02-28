@@ -7,15 +7,14 @@ HLDFAD is a back end deputed to provide high level outputs based on acquisition 
 according to contents reported in Platform GOST Observation Catalog. Output Messages can be provided in MQTT format through internal MQTT Output Broker and\or OGC Service Catalog Output.
 
 The complete bottom-up data chain is the following: 
+- On Field Data Sensors (wristband and cameras)
+- On Field Gateway
+- SCRAL
+- LinkSmart
+- HLDFAD
+- OGC and DSS
 
-    - On Field Data Sensors (wristband and cameras)
-    - On Field Gateway
-    - SCRAL
-    - LinkSmart
-    - HLDFAD
-    - OGC and DSS
-Figure below provides a quick overview to give a general understanding about HLDFAD position module.
-![General MONICA Architecture]|(https://github.com/MONICA-Project/HLDFAD_SourceCode/blob/master/WP6BreakdownDiagram.png) 
+Figure below provides a quick overview to give a general understanding about HLDFAD position module.![General MONICA Architecture](https://github.com/MONICA-Project/HLDFAD_SourceCode/blob/master/WP6BreakdownDiagram.png "General Monica Architecture") 
 
 HLDFAD Module actually interacts directly with exchange end point, that are middleware between different MONICA modules. Such elements are reported in the following:
 - *WP6 Service Catalog*: Beginning End Point that communicates IOT ID and MQTT output broker for MQTT output messages;
@@ -83,7 +82,7 @@ Based on people geospatial density maps received by Security Fusion Nodes, HLDFA
 
 ## Detailed Information
 
-###Docker Composition
+### Docker Composition
 
 HLDFAD is a Docker-composed solution relying on Django Python framework. Docker containers that compose the HLDFAD solution are the following: 
 
@@ -171,7 +170,7 @@ Such variables allows to set up main internal configuration data, in particular 
 Such variables allows to set up main additional configuration data to regulate internal software behaviour.
 
 | Environment Docker | .env Variable | Type | Meaning | Default Value |
-| ---------- | ---------- | ---- | --------------- | ------- |
+| -------- | -------- | ---- | ------------------ | ------- |
 |**APPSETTING_ENABLE_EMPTY_CROWD_HEATMAP**| ${V_APPSETTING_ENABLE_EMPTY_CROWD_HEATMAP}|*bool*| Enable Creation of empty Crowd Heatmap when no observation are received | False|
 |**APPSETTING_ENABLE_RANDOM_OUTPUT**| ${V_APPSETTING_ENABLE_RANDOM_OUTPUT}|*bool*| Enable Creation of random Crowd Heatmap when no observation are received| False|
 |**APPSETTING_ENABLE_RANDOM_QUEUEDETECTIONALERT**| ${V_APPSETTING_ENABLE_RANDOM_QUEUEDETECTIONALERT}|*bool*| Enable Creation of random Queue Detection Alert when no observation are received||
@@ -262,5 +261,5 @@ Contributions are welcome.
 Please fork, make your changes, and submit a pull request. For major changes, please open an issue first and discuss it with the other authors.
 
 ## Affiliation
-![MONICA]|(https://github.com/MONICA-Project/template/raw/master/monica.png)  
+![MONICA](https://github.com/MONICA-Project/template/raw/master/monica.png)  
 This work is supported by the European Commission through the [MONICA H2020 PROJECT]|(https://www.monica-project.eu) under grant agreement No 732350.
