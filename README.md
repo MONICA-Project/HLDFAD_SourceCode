@@ -1,6 +1,8 @@
 # High Level Data Fusion and Anomaly Detection Module (HLDFAD) Quick Start Guide
 <!-- Short description of the project. -->
 
+## HLDFAD Overview
+
 HLDFAD is a back end deputed to provide high level outputs based on acquisition and elaboration of selected on field observables received from MQTT Platform Broker. MQTT input topics are filtered
 according to contents reported in Platform GOST Observation Catalog. Output Messages can be provided in MQTT format through internal MQTT Output Broker and\or OGC Service Catalog Output.
 
@@ -19,33 +21,6 @@ HLDFAD Module actually interacts directly with exchange end point, that are midd
 - *WP6 Service Catalog*: Beginning End Point that communicates IOT ID and MQTT output broker for MQTT output messages;
 - *OGC Service Catalog*: Beginning End Point that reports all Things and Datastreams available. HLDFAD extracts MQTT Observations topics from there
 - *MQTT Broker Observations and Output*: Runtime MQTT endpoint for input observations acquisition and output provisioning
-
-## Docker Hub
-
-It is available a Docker Hub image monicaproject/hldfad_worker at [DockerHub](https://hub.docker.com/repository/docker/monicaproject/hldfad_worker) web site. Latest tag is 02.06.01.05.
-
-## Main functionalities
-
-Tag 02.06.01.05 of HLFDAD Docker hub images offers the following functionalities:
-
-- Crowd Heatmap, based on Wristbands Localization input
-- Queue detection Alert, based on Security Fusion Node density maps.
-
-### Crowd Heatmap
-
-Based on localization received by Wristbands Gateway, HLDFAD calculates people density map, i.e. the occurrency of the positions within a geographic monitored area expressed in terms of geo spatial rectangular matrix.
-
-### Queue Detection Alert
-
-Based on people geospatial density maps received by Security Fusion Nodes, HLDFAD generates geographic polygons with adjacent cells with specific mean of people.
-
-## Detailed Information
-
-HLDFAD is a Docker-composed solution relying on Django Python framework. Docker containers that compose the HLDFAD solution are the following: 
-
-    - worker: Django-Celery main docker, that includes task generation and management (High Level Data Fusion core)
-    - rabbit: Exchange and Queue for Django task system management
-    - redis: Cache for temporarily storage of incoming observation input before elaboration (second most important container after celery) 
 
 ## Definition and Terms
 <table>
@@ -87,6 +62,46 @@ HLDFAD is a Docker-composed solution relying on Django Python framework. Docker 
     </tr>
 </table>
 
+## Docker Hub
+
+It is available a Docker Hub image monicaproject/hldfad_worker at [DockerHub](https://hub.docker.com/repository/docker/monicaproject/hldfad_worker) web site. Latest tag is 02.06.01.05.
+
+## Main functionalities
+
+Tag 02.06.01.05 of HLFDAD Docker hub images offers the following functionalities:
+
+- Crowd Heatmap, based on Wristbands Localization input
+- Queue detection Alert, based on Security Fusion Node density maps.
+
+### Crowd Heatmap
+
+Based on localization received by Wristbands Gateway, HLDFAD calculates people density map, i.e. the occurrency of the positions within a geographic monitored area expressed in terms of geo spatial rectangular matrix.
+
+### Queue Detection Alert
+
+Based on people geospatial density maps received by Security Fusion Nodes, HLDFAD generates geographic polygons with adjacent cells with specific mean of people.
+
+## Detailed Information
+
+###Docker Composition
+
+HLDFAD is a Docker-composed solution relying on Django Python framework. Docker containers that compose the HLDFAD solution are the following: 
+
+- *worker*: Django-Celery main docker, that includes task generation and management (High Level Data Fusion core)
+- *rabbit*: Exchange and Queue for Django task system management
+- *redis*: Cache for temporarily storage of incoming observation input before elaboration (second most important container after celery)
+- *posgresql*: Used only in Development for creating PosgreSQL server and database (in production, it is used an external PosgreSQL Database)
+
+### Core Application
+
+Service worker is the core application. After waiting for startup PosgreSQL database, rabbit and redis, the container starts running, as reported in the following phases:
+- **Startup**: it perform migrations of local models to databases if required and then launch celery exchanges for task management.
+- **Topic Acquisition**: it connects to OGC Service Catalog in order to retrieve topics for accessing to required observations (based on configuration explained in Section [configuration](#custom-types-and-additional-definition) and queries WP6 Service Catalog to retrieve ID for creating output topics.
+- **Topic Subscription**: it connects and requires subscription to MQTT broker in order to start receiving observations filtered.
+- **Observation Acquisition**: it receives and parse observations (that are temporarily stored on redis cache)
+- **Elaboration**: Processing of received observation retrieved from redis cache. The result is stored in PosgreSQL database.
+- **Provisioning**: When processing is completed, it is activated async provisioning that exctracts output messages from database and sends to MQTT Broker using specific topic associated
+	
 ## Repository Contents
 
 In the following it is reported a quick overview of the current repository in terms of folder presentation.
@@ -102,12 +117,12 @@ In the following it is reported a quick overview of the current repository in te
 
 ## HLDFAD Component Configuration
 
-File ${REPO_ROOT}/.env (symbolic link generated after startup setup) reports the environment variables that area mapped on docker-compose file. . In the following, the environment variable are categorized in different sub lists. For each variable, it is indicated the name, the matching with default .env value (based on .env reported in Git Hub repository), the type (intended in terms of internal parsing) , an explaination and default value (if available).
-See Section [Getting Started](#getting-started).
+File ${REPO_ROOT}/.env (symbolic link generated after startup setup) reports the environment variables that area mapped on docker-compose file. In the following, the environment variable are categorized in different sub lists. For each variable, it is indicated the name, the matching with default .env value (based on .env reported in Git Hub repository), the type (intended in terms of internal parsing) , an explaination and default value (if available).
+See [Getting Started](#getting-started).
 
 ### Environment Variables: External Interfaces
 
-Such variables allows to set up this module towards external end point.
+Such variables allows to set up this module towards external end point: GOST, MQTT Broker and Service Catalog (Things, Datastreams and topics providers).
 
 | Environment Docker | .env Variable | Type | Meaning | Default Value |
 | ---------- | ---------- | ---- | --------------- | ------- |
@@ -164,8 +179,10 @@ Such variables allows to set up main additional configuration data to regulate i
 |**APPSETTING_TASK_ALIVEAPP_FREQ_SECS**| ${V_APPSETTING_TASK_ALIVEAPP_FREQ_SECS}|*int*| Interval of Task Alive in seconds (it just provides evidence via log that HLDFAD is up and running and the thread are up))|False|
 |**APPSETTING_ENABLE_OBS_IOTIDRETRIEVE**| ${V_APPSETTING_ENABLE_OBS_IOTIDRETRIEVE}|*bool*| Enable Retrieving of observation IoT Identifier from OGC Catalog| True |
 |**APPSETTING_GOST_NAME**| ${V_APPSETTING_GOST_NAME}|*str*| Beginning Label in composition of observation topics |GOST|
-|**APPSETTINGS_ENABLE_IMMEDIATEELABORATION_FEEDBYNUMBEROBS**| ${V_APPSETTINGS_ENABLE_IMMEDIATEELABORATION_FEEDBYNUMBEROBS}|*bool*| Enable immediate trigger elaboration of Crowd Heatmap (and-or Queue Detection) when the number of observations unprocessed reaches up the number of associated datastreams |True|
+|**APPSETTINGS_ENABLE_IMMELAB**  | ${V_APPSETTINGS_ENABLE_IMMELAB}|*bool*| Enable immediate trigger elaboration of Crowd Heatmap (and-or Queue Detection) when the number of observations unprocessed reaches up the number of associated datastreams |True|
 |**CONFENVIRONMENT_GLOBALINFO**| ${V_CONFENVIRONMENT_GLOBALINFO}|*str*| Label To Identify Environment||
+
+**NOTE**:  APPSETTINGS_ENABLE_IMMELAB real name is APPSETTINGS_ENABLE_IMMEDIATEELABORATION_FEEDBYNUMBEROBS, whereas V_APPSETTINGS_ENABLE_IMMELAB real value is V_APPSETTINGS_ENABLE_IMMEDIATEELABORATION_FEEDBYNUMBEROBS. They was changed just for formatting issues
 
 ### Custom Types and additional definition
 
@@ -235,10 +252,9 @@ For this reason, it has been created a dedicated repository that allows to easil
 ## Simulators
 
 Complete execution of such application mainly depends on presence of input messsages. Therefore, it is required to activate input messages from the field (real data) 
-or through simulators. There are two simulator already available to test solution: 
-
-    - **Wristband Generator**: Java gradle application that emulates Wristband Gateway (it requires SCRAL and LinkSmart), see  [Wristband Localization Simulator]|(https://github.com/MONICA-Project/WristbandLocationSimulators/blob/master/README.md)
-    - **Wristband Complete Generator**: Docker-compose emulator that replace Wristbands, Wristband Gateway, SCRAL and LinkSmart (HLDFAD can connect to it directly)
+or through simulators. There are two simulator already available to test solution:
+- **Wristband Generator**: Java gradle application that emulates Wristband Gateway (it requires SCRAL and LinkSmart), see  [Wristband Localization Simulator](https://github.com/MONICA-Project/WristbandLocationSimulators/blob/master/README.md)
+- **Wristband Complete Generator**: Docker-compose emulator that replace Wristbands, Wristband Gateway, SCRAL and LinkSmart (HLDFAD can connect to it directly) [Wristband Complete Docker Repo](https://github.com/MONICA-Project/WristbandGwMqttEmulator)
 
 ## Contributing
 Contributions are welcome. 
