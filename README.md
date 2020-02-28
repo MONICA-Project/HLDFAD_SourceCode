@@ -1,6 +1,5 @@
 # High Level Data Fusion and Anomaly Detection Module (HLDFAD) Quick Start Guide
-<!-- Short description of the project. -->
-
+HLDFAD Module is a cloud component of MONICA project architecture. To see more information about the project, please visit [GitHub Page](https://monica-project.github.io/).
 
 ## HLDFAD Overview
 
