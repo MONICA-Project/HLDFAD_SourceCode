@@ -24,7 +24,7 @@ pytz==2018.5
 redis==3.2.1
 python-redis-lock[django]
 repoze.lru==0.7
-requests==2.19.1
+requests==2.20.0
 stevedore==1.29.0
 translationstring==1.3
 uritemplate==3.0.0
