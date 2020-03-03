@@ -183,7 +183,7 @@ Such variables allows to set up main additional configuration data to regulate i
 
 ### Custom Types and additional definition
 
-HLDFAD Worker Docker has its own json external configuration file under path [${REPO_ROOT}/images/monica_celery/appconfig/appconfig.json](images/monica_celery/appconfig/appconfig.json).
+HLDFAD Worker Docker has its own json external configuration file under path [${REPO_ROOT}/volumes/monica_celery/appconfig/appconfig.json](volumes/monica_celery/appconfig/appconfig.json).
 
 It allows to enable one or both the output by field **LIST_OUTPUT_MESSAGES**. It is an array of labels that is parsed from application that can includes one or both:
 
