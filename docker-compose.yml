@@ -34,9 +34,9 @@ services:
     # command: ./images/monica_celery/celery_entrypoint.sh
     volumes:
       # - ./monica:/code
-      - ./images/monica_celery/logs:/logs
-      - ./images/monica_celery/appconfig:/appconfig
-      - ./images/monica_celery/var/run/celery:/var/run/celery
+      - ./volumes/monica_celery/logs:/logs
+      - ./volumes/monica_celery/appconfig:/appconfig
+      - ./volumes/monica_celery/var/run/celery:/var/run/celery
     networks:
       - monica_hldfad_net
     environment:
