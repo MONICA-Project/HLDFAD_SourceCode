@@ -110,7 +110,7 @@ In the following it is reported a quick overview of the current repository in te
 | ---- | -------------------------------- | ---- |
 |.| Docker Composes and environment files. Note: docker-compose_os is the file to build up only the base OS for HLDFAD worker|[${REPO_ROOT}](.)|
 |environment| It contains files supporting tools for beginning setup project| [${REPO_ROOT}/environment](environment)|
-|images| Volumes, Dockerfile, entrypoints and configuration for containers| [${REPO_ROOT}/images](images)| 
+|volumes| Volumes, Dockerfile, entrypoints and configuration for containers| [${REPO_ROOT}/volumes](volumes)| 
 |monica| Python Source Code for HLDFAD Worker Docker application (Django-Celery based)| [${REPO_ROOT}/monica](monica)|
 |tools| Bash script to startup environment for first usage| [${REPO_ROOT}/tools](tools)|
 
