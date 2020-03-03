@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # wait for RabbitMQ server to start
-echo "ENTERED IN CELERY WORKER ENTRYPOINT v1.9"
+echo "ENTERED IN CELERY WORKER ENTRYPOINT v1.12"
 
 echo "CHECK PosgreSQL Server Availability"
 
@@ -16,7 +16,6 @@ echo "CREATE MIGRATION FOLDER AND BEAT SCHEDULE IF NOT EXISTS"
 
 [ ! -d "./jobs/migrations" ] && mkdir "./jobs/migrations"
 [ ! -f "./jobs/migrations" ] && touch "./jobs/migrations/__init__.py"
-[ ! -f "/var/run/celery/beat-schedule" ] && touch "/var/run/celery/beat-schedule"
 
 echo "CHANGE OWNERSHIP FILES and FOLDERS"
 
@@ -25,9 +24,10 @@ chown myuser:myuser ./jobs
 chown myuser:myuser ./manage.py
 chown myuser:myuser ./shared/settings/appglobalconf.py
 chown myuser:myuser ./jobs/models.py
-chown myuser:myuser /var/run/celery/beat-schedule
+chown myuser:myuser /var/run/celery
 chown myuser:myuser ./jobs/migrations
 chown myuser:myuser ./jobs/migrations/__init__.py
+chown myuser:myuser /appconfig
 chown myuser:myuser /logs/
 
 echo "CREATE MIGRATIONS RESOURCES"
@@ -57,6 +57,8 @@ done
 
 echo "RabbitMQ Available. LAUNCHING CELERY"
 # run Celery worker for our project monica with Celery configuration stored in Celeryconf
-su -m myuser -c "celery -A jobs.tasks worker -Q priority_queue,crowd_queue_elaboration,crowd_queue_provisioning,queue_sw_update_info,queue_task_alive -l INFO -s /var/run/celery/beat-schedule --without-mingle --loglevel=warning -c 10 -B"
+su -m myuser -c "celery -A jobs.tasks worker -Q priority_queue,crowd_queue_elaboration,crowd_queue_provisioning,queue_sw_update_info,queue_task_alive -l INFO -s /var/run/celery/beat-schedule.db --without-mingle --loglevel=warning -c 10 -B"
 
-echo "ERROR CELERY Launch"
+# --scheduler django_celery_beat.schedulers:DatabaseScheduler
+
+echo "Unexpected STOPPED CELERY Launch"

@@ -1,0 +1,32 @@
+FROM osgeo/gdal:alpine-normal-latest
+
+ENV DEBIAN_FRONTEND noninteractive
+
+COPY ./images/monica_celery/entrypoint/requirements.txt /
+
+RUN apk update
+RUN apk upgrade
+#RUN apt-get install -y apt-transport-https wget
+#RUN apt-get install -y software-properties-common curl
+#RUN apt-get install -y libssl-dev libffi-dev
+RUN apk add --virtual build-deps gcc python3-dev musl-dev && \
+    apk add postgresql-dev && \
+    apk add netcat-openbsd
+
+#RUN apk add python3-dev
+RUN apk add postgresql
+
+#RUN apk add python3
+
+RUN echo "http://dl-8.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories \
+  && apk update \
+  && apk add py3-numpy
+
+#RUN apk add py3-pandas
+
+# install python depends
+RUN pip3 install --upgrade pip
+RUN pip3 install -r requirements.txt
+
+# create unprivileged user
+RUN adduser --disabled-password --gecos '' myuser

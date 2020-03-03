@@ -59,49 +59,77 @@ class UtilityJSONConfig:
             with open(json_conf_path, 'r') as file_read:
                 dictionary_complete = json.load(file_read)
 
+            logger.info('UtilityJSON Load Dictrionary from path: {}'.format(json_conf_path))
+
             return dictionary_complete
         except Exception as ex:
             logger.error('UtilityJSON convert_file_dictionary Exception: {}'.format(ex))
             return None
 
     @staticmethod
-    def get_list_output(json_conf_path: str) -> List[OutputMessageType]:
+    def get_list_output(json_conf_path: str,
+                        list_default: List[OutputMessageType] = None) -> List[OutputMessageType]:
         try:
             dictionary_complete = UtilityJSONConfig.convert_file_dictionary(json_conf_path=json_conf_path)
 
             if not dictionary_complete:
-                return None
+                logger.error('UtilityJSON get_list_output Cannot find Dictionary, path: {}'.format(json_conf_path))
+                return list_default
 
             if LabelJSONConf.LABEL_LIST_OUTPUT_MESSAGE not in dictionary_complete:
-                return None
+                return list_default
 
             list_output_strings = dictionary_complete[LabelJSONConf.LABEL_LIST_OUTPUT_MESSAGE]
 
             if not list_output_strings:
-                return None
+                logger.error('UtilityJSON get_list_output Cannot find configurations, path: {}'.format(json_conf_path))
+                return list_default
 
-            return UtilityJSONConfig.convert_liststring_to_outputmessages(list_strings=list_output_strings)
+            list_return = UtilityJSONConfig.convert_liststring_to_outputmessages(list_strings=list_output_strings)
+
+            if not list_return:
+                logger.error('UtilityJSON get_list_output List Return AppConf OutputTypes is Empty, path: '
+                             '{}. Set Default'.format(json_conf_path))
+                return list_default
+
+            logger.info('UtilityJSON get_list_output Load Correctly AppConfig from path: {}'.format(json_conf_path))
+
+            return list_return
         except Exception as ex:
             logger.error('UtilityJSON get_list_output Exception: {}'.format(ex))
             return None
 
     @staticmethod
-    def get_list_mqtttypes(json_conf_path: str) -> List[MQTTPayloadConversion]:
+    def get_list_mqtttypes(json_conf_path: str,
+                           list_default: List[MQTTPayloadConversion] = None) -> List[MQTTPayloadConversion]:
         try:
             dictionary_complete = UtilityJSONConfig.convert_file_dictionary(json_conf_path=json_conf_path)
 
             if not dictionary_complete:
-                return None
+                logger.error(
+                    'UtilityJSON Dictionary Empty, path: {}. Set Default Value'.format(
+                        json_conf_path))
+                return list_default
 
             if LabelJSONConf.LABEL_LIST_MQTTMESSAGES not in dictionary_complete:
-                return None
+                return list_default
 
             list_mqtt_strings = dictionary_complete[LabelJSONConf.LABEL_LIST_MQTTMESSAGES]
 
             if not list_mqtt_strings:
-                return None
+                return list_default
 
-            return UtilityJSONConfig.convert_liststring_to_mqttoutputtype(list_strings=list_mqtt_strings)
+            list_return = UtilityJSONConfig.convert_liststring_to_mqttoutputtype(list_strings=list_mqtt_strings)
+
+            if not list_return:
+                logger.error('UtilityJSON List Output MQTT From AppConfig Empty, pathFile: {}. Set Default Value'.format(json_conf_path))
+                return list_default
+
+            logger.info(
+                'UtilityJSON Extracted MQTT Types from path: {}'.format(
+                    json_conf_path))
+
+            return list_return
         except Exception as ex:
             logger.error('UtilityJSON get_list_output Exception: {}'.format(ex))
             return None

@@ -1,4 +1,5 @@
-FROM monicaproject/hldfad_worker_os:02.06.01.00
+#FROM monicaproject/hldfad_worker_os:02.06.01.00
+FROM antoniodefina1980/django-celery-unofficial:alpine-00.00.02.00
 
 RUN mkdir /code
 
@@ -13,12 +14,11 @@ ENV C_INCLUDE_PATH=/usr/include/gdal
 
 WORKDIR /code
 
-RUN apt-get install -y dos2unix
-RUN apt-get install -y netcat
-
-RUN dos2unix /celery_entrypoint.sh && apt-get --purge remove -y dos2unix && rm -rf /var/lib/apt/lists/*
+RUN apk add dos2unix
+RUN dos2unix /celery_entrypoint.sh && apk del dos2unix
 
 RUN chmod 777 /celery_entrypoint.sh
 RUN chmod 777 /code/shared/settings/appglobalconf.py
 
 ENTRYPOINT ["/celery_entrypoint.sh"]
+# CMD tail -f /dev/null ## NOTE: To access with docker exec -it <docker_compose_name> /bin/ash, enable this row and disable previous one

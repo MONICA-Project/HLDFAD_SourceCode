@@ -39,20 +39,6 @@ LANGUAGE_CHOICES = sorted([(item[1][0], item[0]) for item in LEXERS])
 STYLE_CHOICES = sorted((item, item) for item in get_all_styles())
 
 
-class FakeModel(models.Model):
-    software_version = models.TextField(primary_key=True, blank=True)
-    field_integer = models.IntegerField(blank=True, default=0, null=True)
-    field_array = ArrayField(
-            ArrayField(
-                models.IntegerField(default=0)
-            ), null=True, blank=True
-    )
-    # field_point = models.PointField(geography=True, blank=True, null=True, dim=2)
-
-    class Meta:
-        db_table = 'fake_model'
-
-
 class SWRunningInfo(models.Model):
     software_version = models.TextField(primary_key=True, blank=True)
     timestamp_start = models.DateTimeField(null=True, auto_created=False, auto_now=False, blank=True)

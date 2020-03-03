@@ -1,6 +1,7 @@
 from shared.settings.base import *
 from shared.settings.dockersconf import *
 from shared.settings.version import SW_VERSION
+from general_types.modelsenums import OutputMessageType
 from general_types.general_enums import MQTTPayloadConversion
 from utility.utility_environment_variables import UtilityEnvironment
 from shared.settings.appstableconf import *
@@ -37,8 +38,10 @@ WP6_CATALOG_CONNECTIONPORT = UtilityEnvironment.get_envvar_type(env_name='WP6_CA
 
 PATH_JSON_CONFIG = os.environ.get('JSON_CONFIGURATION_PATH', '/appconfig/appconfig.json')
 
-LIST_OUTPUT_MESSAGES = UtilityJSONConfig.get_list_output(json_conf_path=PATH_JSON_CONFIG)
-LIST_MQTT_OUTPUT_TYPE = UtilityJSONConfig.get_list_mqtttypes(json_conf_path=PATH_JSON_CONFIG)
+LIST_OUTPUT_MESSAGES = UtilityJSONConfig.get_list_output(json_conf_path=PATH_JSON_CONFIG,
+                                                         list_default=[OutputMessageType.OUTPUT_MESSAGE_TYPE_CROWDHEATMAPOUTPUT])
+LIST_MQTT_OUTPUT_TYPE = UtilityJSONConfig.get_list_mqtttypes(json_conf_path=PATH_JSON_CONFIG,
+                                                             list_default=[MQTTPayloadConversion.TYPE_CONVERSION_OGCDICTIONARY])
 
 LOCAL_CONFIG = {
     LocConfLbls.LABEL_MQTT_OBSERVATION_URL: os.environ.get('ENV_MQTT_OBSERVATION_URL', MQTT_OBSERVATION_URL),

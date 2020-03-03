@@ -1,4 +1,5 @@
 # High Level Data Fusion and Anomaly Detection Module (HLDFAD) Quick Start Guide
+
 HLDFAD Module is a cloud component of MONICA project architecture. To see more information about the project, please visit [GitHub Page](https://monica-project.github.io/).
 
 ## HLDFAD Overview
@@ -63,11 +64,11 @@ HLDFAD Module actually interacts directly with exchange end point, that are midd
 
 ## Docker Hub
 
-It is available a Docker Hub image monicaproject/hldfad_worker at [DockerHub](https://hub.docker.com/repository/docker/monicaproject/hldfad_worker) web site. Latest tag is 02.06.01.05.
+It is available a Docker Hub image monicaproject/hldfad_worker at [DockerHub](https://hub.docker.com/repository/docker/monicaproject/hldfad_worker) web site. Latest tag is 02.06.01.06-alpine.
 
 ## Main functionalities
 
-Tag 02.06.01.05 of HLFDAD Docker hub images offers the following functionalities:
+Tag 02.06.01.06-alpine of HLFDAD Docker hub images offers the following functionalities:
 
 - Crowd Heatmap, based on Wristbands Localization input
 - Queue detection Alert, based on Security Fusion Node density maps.
@@ -253,6 +254,7 @@ or through simulators. There are two simulator already available to test solutio
 - **Wristband Complete Generator**: Docker-compose emulator that replace Wristbands, Wristband Gateway, SCRAL and LinkSmart (HLDFAD can connect to it directly) [Wristband Complete Docker Repo](https://github.com/MONICA-Project/WristbandGwMqttEmulator)
 
 ## Contributing
+
 Contributions are welcome. 
 
 Please fork, make your changes, and submit a pull request. For major changes, please open an issue first and discuss it with the other authors.

@@ -12,9 +12,10 @@ djangorestframework-gis==0.3
 djangorestframework-simplejwt==3.2.3
 geographiclib==1.49
 kombu==4.6.7
-numpy==1.15.2
+#numpy==1.15.2
 paho-mqtt==1.4.0
-psycopg2-binary==2.8.4
+#psycopg2-binary
+psycopg2
 ptvsd==3.0.0
 pygeoif==0.7
 Pygments==2.2.0
@@ -34,4 +35,5 @@ virtualenvwrapper==4.8.2
 zope.deprecation==4.3.0
 zope.interface==4.5.0
 django-redis
-gdal==2.4.2
+django_celery_beat==2.0.0
+#gdal==2.4.0
