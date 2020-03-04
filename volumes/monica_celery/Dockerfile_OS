@@ -2,7 +2,7 @@ FROM python:3.8.1-slim-buster
 
 ENV DEBIAN_FRONTEND noninteractive
 
-COPY ./images/monica_celery/entrypoint/requirements.txt /
+COPY ./volumes/monica_celery/entrypoint/requirements.txt /
 
 RUN apt-get -y update
 RUN apt-get upgrade -y

@@ -523,7 +523,19 @@ def broker_connection(sender, instance, **kwargs):
             logger.info("VOLUNTARY BYPASS MANAGEMENT MQTT INPUT DATA")
             CachedComponents.set_startupapplication_completed()
 
-        # first.apply_async(args=["{}"], queue='priority_queue', serializer='json')
+        if LOCAL_CONFIG[LocConfLbls.LABEL_MINIMUM_ACCEPTED_WRISTBAND_TO_START] > 0 and \
+                OutputMessageType.OUTPUT_MESSAGE_TYPE_CROWDHEATMAPOUTPUT in \
+                LOCAL_CONFIG[LocConfLbls.LABEL_OUTPUT_MESSAGELIST_SELECTED]:
+                    counter_wb_registered = CachedComponents.get_counter_datastreams_registered(
+                    datastream_feature=LabelObservationType.LABEL_OBSTYPE_LOCALIZATION)
+
+                    if counter_wb_registered < LOCAL_CONFIG[LocConfLbls.LABEL_MINIMUM_ACCEPTED_WRISTBAND_TO_START]:
+                        logger.info('HLDFAD MODULE STOPPED AFTER ACQUISITION FOR INSUFFICIENT NUMBER OF WRISTBAND, '
+                                    '{0} against {1} minimum configured'.format(counter_wb_registered,
+                                                                                LOCAL_CONFIG[LocConfLbls.LABEL_MINIMUM_ACCEPTED_WRISTBAND_TO_START]))
+                        exit()
+
+        logger.info('HLDFAD STARTUP PHASE DONE WITH SUCCESS')
 
         return {"status", True}
     except Exception as ex:

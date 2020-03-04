@@ -5,6 +5,6 @@ services:
     container_name: hldf_docker_celery_workeros
     build:
       context: .
-      dockerfile: ./images/monica_celery/DockerFile_Alpine
+      dockerfile: ./volumes/monica_celery/DockerFile_Alpine
     volumes:
-      - ./images/monica_celery/var/run/celery:/var/run/celery
+      - ./volume/monica_celery/var/run/celery:/var/run/celery

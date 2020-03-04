@@ -61,6 +61,9 @@ LOCAL_CONFIG = {
     LocConfLbls.LABEL_ENABLE_RANDOM_OUTPUT: DEBUG & UtilityEnvironment.get_envvar_type(env_name='APPSETTING_ENABLE_RANDOM_OUTPUT', type_var=bool, value_if_no=False),
     LocConfLbls.LABEL_ENABLE_IMMEDIATEELABORATION_FEEDBYNUMBEROBS: UtilityEnvironment.get_envvar_type(
         env_name='APPSETTINGS_ENABLE_IMMEDIATEELABORATION_FEEDBYNUMBEROBS', type_var=bool, value_if_no=True),
+    LocConfLbls.LABEL_MINIMUM_ACCEPTED_WRISTBAND_TO_START: UtilityEnvironment.get_envvar_type(env_name='APPSETTING_MINIMUM_ACCEPTWRISTBAND_START',
+                                                                                              type_var=int,
+                                                                                              value_if_no=0),
     LocConfLbls.LABEL_BYPASS_BEGINNING_CATALOG_ACQUISITION: DEBUG & False,
     LocConfLbls.LABEL_BYPASS_MQTTINPUTMESSAGEACQUISITION: DEBUG & False,
     LocConfLbls.LABEL_ENABLE_UNIT_TESTS: DEBUG & False,

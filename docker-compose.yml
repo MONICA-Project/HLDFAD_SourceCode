@@ -27,11 +27,11 @@ services:
     hostname: hldf_host_celery_worker_${ENVTYPE}
     build:
       context: .
-      dockerfile: ./images/monica_celery/Dockerfile
+      dockerfile: ./volumes/monica_celery/Dockerfile
       args:
         - SELECT_DB_TYPE=${V_ARG_DATABASETYPE}
         - ENVIMAGECONFIGURATION=DEVELOPMENT
-    # command: ./images/monica_celery/celery_entrypoint.sh
+    # command: ./volumes/monica_celery/celery_entrypoint.sh
     volumes:
       # - ./monica:/code
       - ./volumes/monica_celery/logs:/logs
@@ -85,6 +85,7 @@ services:
         APPSETTING_ENABLE_OBS_IOTIDRETRIEVE: ${APPENV_ENABLEOBSIDGET}
         APPSETTING_GOST_NAME: ${APPENV_GOST_NAME}
         APPSETTINGS_ENABLE_IMMEDIATEELABORATION_FEEDBYNUMBEROBS: ${V_APPSETTINGS_ENABLE_IMMEDIATEELABORATION_FEEDBYNUMBEROBS}
+        APPSETTING_MINIMUM_ACCEPTWRISTBAND_START: 100
     links:
       - rabbit
       - redis

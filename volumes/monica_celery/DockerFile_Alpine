@@ -2,7 +2,7 @@ FROM osgeo/gdal:alpine-normal-latest
 
 ENV DEBIAN_FRONTEND noninteractive
 
-COPY ./images/monica_celery/entrypoint/requirements.txt /
+COPY ./volumes/monica_celery/entrypoint/requirements.txt /
 
 RUN apk update
 RUN apk upgrade

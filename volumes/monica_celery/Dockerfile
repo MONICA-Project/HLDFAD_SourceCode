@@ -6,7 +6,7 @@ RUN mkdir /code
 # FIXME: ENABLE the following line in order to create Dockerhub image
 COPY ./monica /code/
 
-COPY ./images/monica_celery/entrypoint/celery_entrypoint.sh /
+COPY ./volumes/monica_celery/entrypoint/celery_entrypoint.sh /
 
 # Update C env vars so compiler can find gdal
 ENV CPLUS_INCLUDE_PATH=/usr/include/gdal
