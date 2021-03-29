@@ -18,7 +18,7 @@ paho-mqtt==1.4.0
 psycopg2
 ptvsd==3.0.0
 pygeoif==0.7
-Pygments==2.2.0
+Pygments==2.7.4
 python-dateutil==2.7.3
 pytz==2018.5
 redis==3.2.1
